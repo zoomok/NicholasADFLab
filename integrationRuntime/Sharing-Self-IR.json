@@ -1,0 +1,12 @@
+{
+	"name": "Sharing-Self-IR",
+	"properties": {
+		"type": "SelfHosted",
+		"typeProperties": {
+			"linkedInfo": {
+				"resourceId": "/subscriptions/81bfea44-e5f6-4579-9ded-cfe2c8c45c32/resourcegroups/ASA_RG/providers/Microsoft.DataFactory/factories/DataFactory0318/integrationruntimes/OnPremIR",
+				"authorizationType": "Rbac"
+			}
+		}
+	}
+}
