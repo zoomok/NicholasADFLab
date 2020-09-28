@@ -47,7 +47,77 @@
 					"items": {
 						"value": "@activity('Lookup_Get_Metadata').output.value",
 						"type": "Expression"
-					}
+					},
+					"activities": [
+						{
+							"name": "Copy Blob to SQL",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"wildcardFileName": "*.csv"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": "truncate table dbo.@{item().SQLTable}",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_ADLS_CSV_Movies_Dynamic",
+									"type": "DatasetReference",
+									"parameters": {
+										"FolderName": {
+											"value": "@{item().FolderName}",
+											"type": "Expression"
+										},
+										"DelimiterSymbol": {
+											"value": "@{item().Delimiter}",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ASQL_Movies_Dynamic",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@{item().SQLTable}",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
 				}
 			}
 		],
