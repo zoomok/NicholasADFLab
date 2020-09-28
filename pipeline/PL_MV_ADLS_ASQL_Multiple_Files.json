@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup_Get_Objects",
+				"name": "Lookup_Get_Metadata",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -29,6 +29,25 @@
 						}
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Loop over Metadata",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Get_Metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Get_Metadata').output.value",
+						"type": "Expression"
+					}
 				}
 			}
 		],
