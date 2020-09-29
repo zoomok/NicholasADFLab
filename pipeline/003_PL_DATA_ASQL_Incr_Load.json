@@ -2,6 +2,35 @@
 	"name": "003_PL_DATA_ASQL_Incr_Load",
 	"properties": {
 		"description": "Full or Incremental data load from 0318 (Source) to 0319 (Staging)\n\nLink : https://www.udemy.com/course/implementing-real-world-use-cases-in-azure-data-factory-v2/learn/lecture/19940682#overview",
+		"activities": [
+			{
+				"name": "Read CFG table in 0319",
+				"description": "Read Enabled load table from CFG table in 0319 (Staging DB)",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from cfg where enabled = 1",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_ASQL0319_CFG",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			}
+		],
 		"annotations": []
 	}
 }
