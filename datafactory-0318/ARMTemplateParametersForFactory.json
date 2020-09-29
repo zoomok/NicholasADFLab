@@ -19,9 +19,6 @@
 		},
 		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
 			"value": "https://KV-Nicholas-ADF.vault.azure.net/"
-		},
-		"Sharing-Self-IR_properties_typeProperties_linkedInfo_resourceId": {
-			"value": "/subscriptions/81bfea44-e5f6-4579-9ded-cfe2c8c45c32/resourcegroups/ASA_RG/providers/Microsoft.DataFactory/factories/DataFactory0318/integrationruntimes/OnPremIR"
 		}
 	}
 }

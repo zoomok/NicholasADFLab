@@ -23,10 +23,6 @@
 			"type": "string",
 			"defaultValue": "https://KV-Nicholas-ADF.vault.azure.net/"
 		},
-		"Sharing-Self-IR_properties_typeProperties_linkedInfo_resourceId": {
-			"type": "string",
-			"defaultValue": "/subscriptions/81bfea44-e5f6-4579-9ded-cfe2c8c45c32/resourcegroups/ASA_RG/providers/Microsoft.DataFactory/factories/DataFactory0318/integrationruntimes/OnPremIR"
-		},
 		"LS_Blobstorage0318_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "sec-blobstorage0318-connectionstring"
@@ -75,21 +71,6 @@
 				"type": "AzureKeyVault",
 				"typeProperties": {
 					"baseUrl": "[parameters('LS_KV_BlobStorage0318_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Sharing-Self-IR')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {
-					"linkedInfo": {
-						"resourceId": "[parameters('Sharing-Self-IR_properties_typeProperties_linkedInfo_resourceId')]",
-						"authorizationType": "Rbac"
-					}
 				}
 			},
 			"dependsOn": []
@@ -188,7 +169,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_MV_ADLS_ASQL_Multiple_Files')]",
+			"name": "[concat(parameters('factoryName'), '/01-PL_MV_ADLS_ASQL_Multiple_Files')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
