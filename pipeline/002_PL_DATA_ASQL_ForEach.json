@@ -43,7 +43,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup_Get_TableList').output.value",
+						"value": "@activity('Lookup_Get_TableList').output",
 						"type": "Expression"
 					},
 					"condition": {
