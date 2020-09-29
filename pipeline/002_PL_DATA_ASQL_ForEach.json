@@ -1,0 +1,7 @@
+{
+	"name": "002_PL_DATA_ASQL_ForEach",
+	"properties": {
+		"description": "Copy multiple tables using Filter",
+		"annotations": []
+	}
+}
