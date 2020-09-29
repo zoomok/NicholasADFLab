@@ -1,5 +1,5 @@
 {
-	"name": "PL_MV_ADLS_ASQL_Multiple_Files",
+	"name": "01-PL_MV_ADLS_ASQL_Multiple_Files",
 	"properties": {
 		"activities": [
 			{
@@ -75,7 +75,10 @@
 								},
 								"sink": {
 									"type": "AzureSqlSink",
-									"preCopyScript": "truncate table dbo.@{item().SQLTable}",
+									"preCopyScript": {
+										"value": "truncate table dbo.@{item().SQLTable}",
+										"type": "Expression"
+									},
 									"disableMetricsCollection": false
 								},
 								"enableStaging": false,
