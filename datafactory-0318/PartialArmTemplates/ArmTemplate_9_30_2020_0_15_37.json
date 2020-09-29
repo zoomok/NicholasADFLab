@@ -6,22 +6,6 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "datafactory-0318"
-		},
-		"LS_ADLS_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'LS_ADLS'"
-		},
-		"LS_ASQL0318_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0318'"
-		},
-		"LS_ASQL0319_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0319'"
-		},
-		"LS_ADLS_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://datalake0318.dfs.core.windows.net"
 		}
 	},
 	"variables": {
@@ -154,8 +138,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_Movies_Dynamic')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_CSV_Movies_Dynamic')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_Movies_Dynamic')]"
 			]
 		},
 		{
@@ -186,8 +169,7 @@
 							},
 							"dataset": {
 								"referenceName": "DS_ASQL0318_VW_TableList_P",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": false
 						}
@@ -327,51 +309,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_VW_TableList_P')]",
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]",
 				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_Table_Param')]",
 				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_Table_Param')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_CSV_Movies_Dynamic')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_ADLS",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FolderName": {
-						"type": "string"
-					},
-					"DelimiterSymbol": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().FolderName",
-							"type": "Expression"
-						},
-						"fileSystem": "csv"
-					},
-					"columnDelimiter": {
-						"value": "@dataset().DelimiterSymbol",
-						"type": "Expression"
-					},
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
 			]
 		},
 		{
@@ -399,9 +338,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_Table')]",
@@ -415,12 +352,9 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
+				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_Table_Param')]",
@@ -454,9 +388,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_VW_TableList_P')]",
@@ -484,9 +416,7 @@
 					"table": "VW_TableList_P"
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_Table')]",
@@ -500,12 +430,9 @@
 				},
 				"annotations": [],
 				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
+				"schema": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_Table_Param')]",
@@ -536,51 +463,6 @@
 						"value": "@dataset().table",
 						"type": "Expression"
 					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_ADLS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('LS_ADLS_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('LS_ADLS_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_ASQL0318')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_ASQL0318_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_ASQL0319')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_ASQL0319_connectionString')]"
 				}
 			},
 			"dependsOn": []

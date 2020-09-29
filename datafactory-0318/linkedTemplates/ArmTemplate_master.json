@@ -11,9 +11,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_ADLS'"
 		},
-		"LS_ASQL_connectionString": {
+		"LS_ASQL0318_connectionString": {
 			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_ASQL'"
+			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0318'"
+		},
+		"LS_ASQL0319_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0319'"
 		},
 		"LS_ADLS_properties_typeProperties_url": {
 			"type": "string",
@@ -49,8 +53,11 @@
 					"LS_ADLS_accountKey": {
 						"value": "[parameters('LS_ADLS_accountKey')]"
 					},
-					"LS_ASQL_connectionString": {
-						"value": "[parameters('LS_ASQL_connectionString')]"
+					"LS_ASQL0318_connectionString": {
+						"value": "[parameters('LS_ASQL0318_connectionString')]"
+					},
+					"LS_ASQL0319_connectionString": {
+						"value": "[parameters('LS_ASQL0319_connectionString')]"
 					},
 					"LS_ADLS_properties_typeProperties_url": {
 						"value": "[parameters('LS_ADLS_properties_typeProperties_url')]"

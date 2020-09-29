@@ -8,7 +8,10 @@
 		"LS_ADLS_accountKey": {
 			"value": ""
 		},
-		"LS_ASQL_connectionString": {
+		"LS_ASQL0318_connectionString": {
+			"value": ""
+		},
+		"LS_ASQL0319_connectionString": {
 			"value": ""
 		},
 		"LS_ADLS_properties_typeProperties_url": {
