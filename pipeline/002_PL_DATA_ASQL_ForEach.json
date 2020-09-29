@@ -44,7 +44,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup_Get_TableList').output",
+						"value": "@activity('Lookup_Get_TableList').output.value",
 						"type": "Expression"
 					},
 					"condition": {
