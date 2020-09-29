@@ -1,6 +1,7 @@
 {
 	"name": "DS_ASQL0318_Table",
 	"properties": {
+		"description": "Dataset for general purpose and 0318 tables",
 		"linkedServiceName": {
 			"referenceName": "LS_ASQL0318",
 			"type": "LinkedServiceReference"
