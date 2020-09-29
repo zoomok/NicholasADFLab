@@ -14,12 +14,6 @@
 		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://datalake0318.dfs.core.windows.net"
 		},
-		"LS_Blobstorage0318_properties_typeProperties_connectionString_secretName": {
-			"value": "sec-blobstorage0318-connectionstring"
-		},
-		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
-			"value": "https://KV-Nicholas-ADF.vault.azure.net/"
-		},
 		"containerUri": {
 			"value": ""
 		},

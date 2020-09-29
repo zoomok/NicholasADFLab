@@ -19,14 +19,6 @@
 			"type": "string",
 			"defaultValue": "https://datalake0318.dfs.core.windows.net"
 		},
-		"LS_Blobstorage0318_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "sec-blobstorage0318-connectionstring"
-		},
-		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://KV-Nicholas-ADF.vault.azure.net/"
-		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -62,12 +54,6 @@
 					},
 					"LS_ADLS_properties_typeProperties_url": {
 						"value": "[parameters('LS_ADLS_properties_typeProperties_url')]"
-					},
-					"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
-						"value": "[parameters('LS_KV_BlobStorage0318_properties_typeProperties_baseUrl')]"
-					},
-					"LS_Blobstorage0318_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('LS_Blobstorage0318_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},

@@ -18,14 +18,6 @@
 		"LS_ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://datalake0318.dfs.core.windows.net"
-		},
-		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://KV-Nicholas-ADF.vault.azure.net/"
-		},
-		"LS_Blobstorage0318_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "sec-blobstorage0318-connectionstring"
 		}
 	},
 	"variables": {
@@ -58,19 +50,6 @@
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
 					"connectionString": "[parameters('LS_ASQL_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_KV_BlobStorage0318')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('LS_KV_BlobStorage0318_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -144,28 +123,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_Blobstorage0318')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "LS_KV_BlobStorage0318",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "[parameters('LS_Blobstorage0318_properties_typeProperties_connectionString_secretName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_KV_BlobStorage0318')]"
 			]
 		},
 		{
