@@ -53,6 +53,74 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "ForEach Data Load",
+				"description": "If 'Full Load'",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter CRM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter CRM').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "If Full or Incremental",
+							"description": "True -> Full Load\nFalse -> Incremental Load",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@bool(equals(item().Incremental_Full_Load,1))",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "Get Max LastUpdated CFG",
+										"description": "Get Max_LastUpdatedDate from CFG table",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "select max_lastupdateddate from cfg where table_name = @'{item().Table_name}'",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_CFG",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": false
+										}
+									}
+								]
+							}
+						}
+					]
+				}
 			}
 		],
 		"annotations": []
