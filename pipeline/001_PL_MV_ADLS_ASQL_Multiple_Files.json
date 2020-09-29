@@ -94,17 +94,11 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_ADL_CSV_Movies_Dynamic",
+									"referenceName": "DS_ADLS_CSV_Movies_Dynamic",
 									"type": "DatasetReference",
 									"parameters": {
-										"FolderName": {
-											"value": "@{item().FolderName}",
-											"type": "Expression"
-										},
-										"DelimiterSymbol": {
-											"value": "@{item().Delimiter}",
-											"type": "Expression"
-										}
+										"FolderName": "@{item().FolderName}",
+										"DelimiterSymbol": "@{item().Delimiter}"
 									}
 								}
 							],
