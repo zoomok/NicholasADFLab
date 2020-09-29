@@ -1,7 +1,7 @@
 {
 	"name": "002_PL_DATA_ASQL_ForEach",
 	"properties": {
-		"description": "Copy multiple tables using Filter",
+		"description": "Copy multiple tables using Filter\n\nLink ; https://www.mssqltips.com/sqlservertip/6187/azure-data-factory-foreach-activity-example/",
 		"activities": [
 			{
 				"name": "Lookup_Get_TableList",
