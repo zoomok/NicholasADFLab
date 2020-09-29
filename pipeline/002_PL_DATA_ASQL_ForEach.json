@@ -59,7 +59,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Filter_Table_Startwith_P",
+						"activity": "Purge Table Constraints",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -162,7 +162,14 @@
 			{
 				"name": "Purge Table Constraints",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Filter_Table_Startwith_P",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
