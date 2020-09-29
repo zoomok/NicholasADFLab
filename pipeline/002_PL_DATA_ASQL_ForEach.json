@@ -2,6 +2,57 @@
 	"name": "002_PL_DATA_ASQL_ForEach",
 	"properties": {
 		"description": "Copy multiple tables using Filter",
+		"activities": [
+			{
+				"name": "Lookup_Get_TableList",
+				"description": "Get TableList from SQL0318.dbo.VW_TableList_P",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_ASQL0318_VW_TableList_P",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Filter_Table_Startwith_P",
+				"description": "Filter tables which name starts with 'P'",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Get_TableList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Get_TableList').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(string(item().tbl), 'P')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
 		"annotations": []
 	}
 }
