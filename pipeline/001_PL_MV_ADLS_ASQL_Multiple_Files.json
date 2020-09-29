@@ -94,7 +94,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_ADLS_CSV_Movies_Dynamic",
+									"referenceName": "DS_ADLS0318_CSV_Movies_Dynamic",
 									"type": "DatasetReference",
 									"parameters": {
 										"FolderName": {
