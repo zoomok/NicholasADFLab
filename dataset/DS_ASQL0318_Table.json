@@ -1,0 +1,12 @@
+{
+	"name": "DS_ASQL0318_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL0318",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
