@@ -1,6 +1,7 @@
 {
 	"name": "001_PL_MV_ADLS_ASQL_Multiple_Files",
 	"properties": {
+		"description": "Load multiple csv files in data lake with different file names and delimiters",
 		"activities": [
 			{
 				"name": "Lookup_Get_Metadata",
