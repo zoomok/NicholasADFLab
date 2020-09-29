@@ -7,7 +7,7 @@ ObjectValue VARCHAR(1000) NOT NULL
 );
 
 - Insert Meta data
-INSERT INTO dbo.[Metadata_ADF]
+INSERT INTO dbo.Metadata_ADF	
 		(
 		SourceType,
 		ObjectName,
@@ -16,7 +16,7 @@ INSERT INTO dbo.[Metadata_ADF]
 VALUES  ('BlobContainer','semicolondata','semicolon'),
 		('BlobContainer','commadata','comma');
 
-INSERT INTO dbo.[Metadata_ADF]
+INSERT INTO dbo.Metadata_ADF
 		(
 		SourceType,
 		ObjectName,
@@ -25,7 +25,7 @@ INSERT INTO dbo.[Metadata_ADF]
 VALUES  ('Delimiter','semicolondata',';'),
 		('Delimiter','commadata',',');
 
-INSERT INTO dbo.[Metadata_ADF]
+INSERT INTO dbo.Metadata_ADF
 		(
 		SourceType,
 		ObjectName,
