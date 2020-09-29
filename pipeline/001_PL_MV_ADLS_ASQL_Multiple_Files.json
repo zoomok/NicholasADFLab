@@ -23,7 +23,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "DS_ASQL_Movies_Dynamic",
+						"referenceName": "DS_ASQL0318_Movies_Dynamic",
 						"type": "DatasetReference",
 						"parameters": {
 							"TableName": "_notSet"
@@ -94,7 +94,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "DS_ADLS_CSV_Movies_Dynamic",
+									"referenceName": "DS_ADLS0318_CSV_Movies_Dynamic",
 									"type": "DatasetReference",
 									"parameters": {
 										"FolderName": {
@@ -110,7 +110,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DS_ASQL_Movies_Dynamic",
+									"referenceName": "DS_ASQL0318_Movies_Dynamic",
 									"type": "DatasetReference",
 									"parameters": {
 										"TableName": {

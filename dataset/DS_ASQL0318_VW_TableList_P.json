@@ -1,0 +1,25 @@
+{
+	"name": "DS_ASQL0318_VW_TableList_P",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "sch",
+				"type": "nvarchar"
+			},
+			{
+				"name": "tbl",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "VW_TableList_P"
+		}
+	}
+}
