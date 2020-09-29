@@ -1,5 +1,5 @@
 {
-	"name": "DS_ADL_CSV_Movies_Dynamic",
+	"name": "DS_ADLS_CSV_Movies_Dynamic",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_ADLS",
