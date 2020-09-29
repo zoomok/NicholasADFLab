@@ -29,6 +29,7 @@
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"description": "Load multiple csv files in data lake with different file names and delimiters",
 				"activities": [
 					{
 						"name": "Lookup_Get_Metadata",
