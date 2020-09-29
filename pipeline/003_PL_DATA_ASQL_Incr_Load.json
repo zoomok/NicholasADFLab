@@ -4,7 +4,7 @@
 		"description": "Full or Incremental data load from 0318 (Source) to 0319 (Staging)\n\nLink : https://www.udemy.com/course/implementing-real-world-use-cases-in-azure-data-factory-v2/learn/lecture/19940682#overview",
 		"activities": [
 			{
-				"name": "Read CFG table in 0319",
+				"name": "Load Enabled from 0319",
 				"description": "Read Enabled load table from CFG table in 0319 (Staging DB)",
 				"type": "Lookup",
 				"dependsOn": [],
@@ -28,6 +28,30 @@
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Filter CRM",
+				"description": "Filter 'CRM' source from CFG table",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Load Enabled from 0319",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Load Enabled from 0319').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().Source,'CRM')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
