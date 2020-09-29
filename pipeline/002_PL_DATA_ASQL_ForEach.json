@@ -186,7 +186,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "DS_ASQL0319_Table_Param",
+						"referenceName": "DS_ASQL0319_Table",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
