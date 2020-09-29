@@ -25,7 +25,8 @@
 					"dataset": {
 						"referenceName": "DS_ASQL0318_VW_TableList_P",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
