@@ -1,0 +1,7 @@
+{
+	"name": "003_PL_DATA_ASQL_Incr_Load",
+	"properties": {
+		"description": "Full or Incremental data load from 0318 (Source) to 0319 (Staging)",
+		"annotations": []
+	}
+}
