@@ -2,7 +2,7 @@
 	"name": "DS_ASQL0318_Movies_Dynamic",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_ASQL",
+			"referenceName": "LS_ASQL0318",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {

@@ -2,7 +2,7 @@
 	"name": "DS_ASQL0318_VW_TableList_P",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_ASQL",
+			"referenceName": "LS_ASQL0318",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
