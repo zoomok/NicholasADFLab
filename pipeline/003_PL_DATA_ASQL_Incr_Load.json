@@ -76,7 +76,7 @@
 					"activities": [
 						{
 							"name": "If Full or Incremental",
-							"description": "True -> Full Load\nFalse -> Incremental Load",
+							"description": "(1) True -> Incremental Load\n(0) False -> Full Load",
 							"type": "IfCondition",
 							"dependsOn": [],
 							"userProperties": [],
@@ -87,7 +87,7 @@
 								},
 								"ifTrueActivities": [
 									{
-										"name": "Full Load - Get Max LastUpdated CFG",
+										"name": "Incr Load - Get Max LastUpdated CFG",
 										"description": "Get Max_LastUpdatedDate from CFG table",
 										"type": "Lookup",
 										"dependsOn": [],
@@ -121,7 +121,7 @@
 										"type": "Copy",
 										"dependsOn": [
 											{
-												"activity": "Full Load - Get Max LastUpdated CFG",
+												"activity": "Incr Load - Get Max LastUpdated CFG",
 												"dependencyConditions": [
 													"Succeeded"
 												]
