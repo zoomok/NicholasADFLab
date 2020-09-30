@@ -165,7 +165,7 @@
 										"typeProperties": {
 											"source": {
 												"type": "AzureSqlSource",
-												"sqlReaderQuery": "select max(last_update_date) as maxD\nfrom @{item().Table_Name}",
+												"sqlReaderQuery": "select max(last_updated_date) as maxD\nfrom @{item().Table_Name}",
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
@@ -328,7 +328,10 @@
 										"typeProperties": {
 											"source": {
 												"type": "AzureSqlSource",
-												"sqlReaderQuery": "select max(Last_Updated_Date) as maxD from @{item().Table_Name}",
+												"sqlReaderQuery": {
+													"value": "select max(Last_Updated_Date) as maxD from @{item().Table_Name}",
+													"type": "Expression"
+												},
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
