@@ -2,7 +2,7 @@
 -- (Full load)
 --------------------------------------------------------------------------------------
 -- Current date : (2020-09-13 11:10:11.000)
--- SQL0318
+-- Source (SQL0318)
 truncate table customer;
 truncate table lead;
 truncate table users;
@@ -16,7 +16,7 @@ insert into Customer values('Citibank', '985 W Jackson St', 'New York', getdate(
 insert into Users values('Nicholas', '46 Crown Point Ridge', getdate()-12);		--> (2020-09-01)
 insert into Users values('Sunny', '22 Capricorn Ave', getdate()-12);			--> (2020-09-01)
 
--- STG
+-- STG (SQL0319)
 truncate table cfg;
 truncate table customer;
 truncate table lead;
