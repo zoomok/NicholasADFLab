@@ -237,7 +237,7 @@
 											"source": {
 												"type": "AzureSqlSource",
 												"sqlReaderQuery": {
-													"value": "select max_lastupdateddate from cfg where table_name = @'{item().Table_name}'",
+													"value": "select max_lastupdateddate from cfg where table_name = '@{item().Table_name}'",
 													"type": "Expression"
 												},
 												"queryTimeout": "02:00:00",
