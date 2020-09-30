@@ -87,7 +87,7 @@
 								},
 								"ifTrueActivities": [
 									{
-										"name": "Get Max LastUpdated CFG",
+										"name": "Full Load - Get Max LastUpdated CFG",
 										"description": "Get Max_LastUpdatedDate from CFG table",
 										"type": "Lookup",
 										"dependsOn": [],
@@ -114,6 +114,69 @@
 												"type": "DatasetReference"
 											},
 											"firstRowOnly": false
+										}
+									},
+									{
+										"name": "Copy SRC-0318 to STG-0319",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Full Load - Get Max LastUpdated CFG",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"enableStaging": false
+										}
+									},
+									{
+										"name": "Get Max Update date from Actual Tables",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "Copy SRC-0318 to STG-0319",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": "select max(Last_Updated_Date) from @{item().Table_Name}",
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_Table_Param",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": "dbo",
+													"table": {
+														"value": "@{item().Table_Name}",
+														"type": "Expression"
+													}
+												}
+											},
+											"firstRowOnly": true
 										}
 									}
 								]
