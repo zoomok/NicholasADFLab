@@ -44,7 +44,7 @@ Users		CRM		2020-09-01 11:09:55.160		1		0
 --------------------------------------------------------------------------------------
 -- (Incremental load)
 --------------------------------------------------------------------------------------
--- SQL0318
+-- Source(SQL0318)
 insert into Lead values('Lead1','EBS','Hydrolics', getdate()-9);	--> (2020-09-04)
 insert into Lead values('Lead2','BR','Crane', getdate()-9);			--> (2020-09-04)
 insert into Lead values('Lead3','BR','Crane', getdate()-5);			--> (2020-09-08)
@@ -57,7 +57,7 @@ insert into Users values('Users1', '46 Crown Point Ridge', getdate()-7);	--> (20
 insert into Users values('Users2', '22 Capricorn Ave', getdate()-7);		--> (2020-09-06)
 insert into Users values('Users3', '22 Capricorn Ave', getdate()-5);		--> (2020-09-08)
 
--- STG
+-- STG(SQL0319)
 update 	cfg
 set		Incremental_Full_Load = 1
 ;
