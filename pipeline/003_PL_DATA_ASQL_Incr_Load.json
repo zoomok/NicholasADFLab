@@ -204,7 +204,10 @@
 										"typeProperties": {
 											"source": {
 												"type": "AzureSqlSource",
-												"sqlReaderQuery": "update  CFG\nset\t\tMax_LastUpdatedDate = \n'@{activity('Get Max Update date from Actual Table').output.firstRow.maxD}'\nwhere\ttable_name like '@{item().Table_Name}'",
+												"sqlReaderQuery": {
+													"value": "update CFG set Max_LastUpdatedDate = '@{activity('Get Max Update date from Actual Table').output.firstRow.maxD}' where table_name like '@{item().Table_Name}'\nselect '1'",
+													"type": "Expression"
+												},
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
@@ -372,7 +375,7 @@
 											"source": {
 												"type": "AzureSqlSource",
 												"sqlReaderQuery": {
-													"value": "update cfg set max_lastupdateddate = @{activity('Get Max Update date from Actual Tables').output.firstrow.maxD} where table_name = '@item().Table_Name'",
+													"value": "update cfg set max_lastupdateddate = @{activity('Get Max Update date from Actual Tables').output.firstrow.maxD} where table_name = '@item().Table_Name'\nselect '1'",
 													"type": "Expression"
 												},
 												"queryTimeout": "02:00:00",
