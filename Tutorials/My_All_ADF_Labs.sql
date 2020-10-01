@@ -1,6 +1,6 @@
 --#################################################################################################################################################################
 --#################################################################################################################################################################
---1. Azure Data Factory									###########################################################################################################
+--1. Azure Data Factory					###########################################################################################################
 --#################################################################################################################################################################
 --#################################################################################################################################################################
 -- Gmail
@@ -8,13 +8,13 @@
 -- nicholas.azure.asa@gmail.com / Dkagh0318
 
 -- Azure portal ID History
-1) zoomok@gmail.com / Dkagh0318			 --> Pay-as-you-go / Data bricks (removed)
-2) wakeup.nicholas@gmail.com / Dkagh0318 --> Free subscription (disabled)
+1) zoomok@gmail.com / Dkagh0318			--> Pay-as-you-go / Data bricks (removed)
+2) wakeup.nicholas@gmail.com / Dkagh0318 	--> Free subscription (disabled)
 3) 
  / Dkagh0318	--> Free subscription (disabled)
 4) obiee@naver.com / dkagh0318			--> Free subscription (disabled) / Keep ADF sources
 
-5) nicholas.azure.adf@gmail.com / Dkagh0318		--> Current
+5) nicholas.azure.adf@gmail.com / Dkagh0318	--> Current
 6) nicholas.azure.asa@gmail.com / Dkagh0318
 
 
@@ -72,34 +72,34 @@
 
 2. Create Trigger
 	* Data Factory portal -> Manage (4th Tab) -> New
-		- Name 					: MyFileEventTrigger
+		- Name 			: MyFileEventTrigger
 		- Storage account name 	: datalake0318
-		- Container name 		: csvfiles
+		- Container name 	: csvfiles
 		- Blob path ends with 	: .csv
 
 3. Datasets
 	* DS_ADLS_InternetSales_Param
 		- Linked service	: LS_ADLS_0318
 		- Parameters
-			- Name			: FileName
-			- Type			: String
+			- Name		: FileName
+			- Type		: String
 			- Default value	: @pipeline().parameters.SourceFile
-		- File path			: csvfiles/(blank)/@dataset.FileName
+		- File path		: csvfiles/(blank)/@dataset.FileName
 		- First row as header : Checked
 
 	* DS_SQL_FactInternetSales
 		- Linked service	: LS_SQL_0319
-		- Table				: FactInternetSales
+		- Table			: FactInternetSales
 
 	* DS_SQL_DimCurrency
 		- Linked service	: LS_SQL_0319
-		- Table				: DimCurrency
+		- Table			: DimCurrency
 
 4. Create Pipeline
 	* PL_DATA_ADLS_to_DS_FactInternetSales_Event
 		- Parameters
-			- Name			: SourceFile
-			- Type			: String
+			- Name		: SourceFile
+			- Type		: String
 	* Add If Condition Activity
 		- Activities		: @bool(startswith(pipeline().parameters.SourceFile,'FactInternetSales'))
 		- True
@@ -154,13 +154,13 @@ END
 2. Datasets
 	* DS_ASQL_VW_TableList_P
 		- Linked service 	: LS_SQL_0318
-		- Table 			: dbo.VW_TableList_P
+		- Table 		: dbo.VW_TableList_P
 
 	* DS_ASQL_0318_Table_Param
 		- Linked service	: LS_SQL_0318
 		- Parameter
 			- SchemaName / String
-			- TableName	 / String
+			- TableName  / String
 		- Table : @dataset().SchemaName / @dataset().TableName
 
 	* DS_ASQL_0319_Table_Param
@@ -181,7 +181,7 @@ END
 		- Condition	: @startswith(string(item().tbl),'P') --> `tbl` from view column name
 
 	* Add Strored procedure activity
-		- Linked service		: LS_SQL_0319
+		- Linked service	: LS_SQL_0319
 		- Stored procedure name	: Usp_PurgeTargetTables
 
 	* Add ForEach activity
@@ -212,10 +212,10 @@ END
 
 * A single pipeline which can load dynamically multiple tables as we want
 * Config Table
-	- Table Name 			: List of tables that we want to load in staging (80 tables)
-	- DataSource			: OracleERP
+	- Table Name 		: List of tables that we want to load in staging (80 tables)
+	- DataSource		: OracleERP
 	- Max_LastUpdateDate 	: MAX(LastUpdatedDate) in staging table (15th May as of 17th May)
-	- Enabled				: Flag for tables to load (1 : Enabled, 0 : Disabled)
+	- Enabled		: Flag for tables to load (1 : Enabled, 0 : Disabled)
 	- Incremental_Fullload 	: (1 : Incremental, 0 : Full load)
 
 * (17/05) -> 15th May 2020
@@ -283,16 +283,16 @@ Last_Updated_Date datetime
 3. Datasets
 	* DS_ASQL_0318_SRC_Tables
 		- Linked service	: LS_SQL_0318
-		- Table				: Customer
+		- Table			: Customer
 
 	* DS_ASQL_Staging_CFG
 		- Linked service 	: LS_SQL_Staging
-		- Table 			: cfg
+		- Table 		: cfg
 
 	* DS_ASQL_Staging_Tables
 		- Linked service	: LS_SQL_Staging
 		- Parameters		: Table
-		- Table				: dbo.@dataset().TableName
+		- Table			: dbo.@dataset().TableName
 
 4. Create Pipeline
 	* PL_DATA_ASQL_IncrDataLoad
@@ -316,17 +316,18 @@ Last_Updated_Date datetime
 			- True	--> Incremental load
 				* Add Lookup activity : Get Max LastUpdateDate from CFG
 					- Query	: 	select	max_lastupdateddate
-								from	cfg
-								where	table_name = '@{item().Table_Name}'
+							from	cfg
+							where	table_name = '@{item().Table_Name}'
 
 				* Add Copy activity : Copy SRC to STG Incremental
 					- Source
 					- dataset 	: DS_ASQL_0318_Customer
 					- Query		:
-								select  *
-								from @{item().Table_Name}
-								where convert(varchar(max), last_updated_date, 120) >
-								convert(varchar(max), substring(replace('@{activity('Get Max UpdateDate from CFG').output.firstrow.max_lastupdateddate}', 'T', ' '), 0, 20), 120)
+							select  *
+							from @{item().Table_Name}
+							where convert(varchar(max), last_updated_date, 120) >
+							convert(varchar(max), substring(replace('@{activity('Get Max UpdateDate from CFG').
+							output.firstrow.max_lastupdateddate}', 'T', ' '), 0, 20), 120)
 					- Sink
 					- dataset	: DS_ASQL_Staging_Tables
 					- Table		: @{item().Table_Name}
@@ -336,18 +337,18 @@ Last_Updated_Date datetime
 					- dataset	: DS_ASQL_Staging_Tables
 					- Table		: @{item().Table_Name}
 					- Query		:
-								select  max(Last_Updated_Date) as maxD
-								from	@{item().Table_Name}
+							select  max(Last_Updated_Date) as maxD
+							from	@{item().Table_Name}
 					- First row only : Checked
 				
 				* Add Lookup activity : Update max last update date in CFG
 					- Source
 					- dataset	: DS_ASQL_Staging_CFG
 					- Query		:
-								update 	CFG
-								set 	max_lastupdateddate = '@{activity('Get Max Update').output.firstRow.maxD}'
-								where	table_name like '@{item().Table_Name}'
-								select	'1'
+							update 	CFG
+							set 	max_lastupdateddate = '@{activity('Get Max Update').output.firstRow.maxD}'
+							where	table_name like '@{item().Table_Name}'
+							select	'1'
 					- First row only : Checked
 
 			- False	--> Full load
@@ -355,8 +356,8 @@ Last_Updated_Date datetime
 					- Source
 					- dataset	: DS_ASQL_0318_Customer
 					- Query		:
-								select	*
-								from	@{item().Table_Name}
+							select	*
+							from	@{item().Table_Name}
 					- Sink
 					- dataset	: DS_ASQL_Staging_Tables
 					- Table		: @{item().Table_Name}
@@ -366,18 +367,18 @@ Last_Updated_Date datetime
 					- dataset	: DS_ASQL_Staging_Tables
 					- Table		: @{item().Table_Name}
 					- Query		:
-								select	max(last_updated_date) as maxD
-								from	@{item().Table_Name}
+							select	max(last_updated_date) as maxD
+							from	@{item().Table_Name}
 					- Firstt row only : Checked
 				
 				* Add Lookup activity : Update CFG table
 					- dataset	: DS_ASQL_Staging_CFG
 					- Query		:
-								update 	CFG
-								set		Max_LastUpdatedDate = 
-								'@{activity('Get Max Update date from Staging').output.firstRow.maxD}'
-								where	table_name like '@{item().Table_Name}'
-								select	'1'
+							update 	CFG
+							set		Max_LastUpdatedDate = 
+							'@{activity('Get Max Update date from Staging').output.firstRow.maxD}'
+							where	table_name like '@{item().Table_Name}'
+							select	'1'
 					- First row only : Checked
 
 5. Test
@@ -391,7 +392,7 @@ truncate table customer;
 truncate table lead;
 truncate table users;
 
-insert into Lead values('John', 'EmailCampaign', 'Hydrolics', getdate()-10); 	--> (2020-09-03)
+insert into Lead values('John', 'EmailCampaign', 'Hydrolics', getdate()-10); 		--> (2020-09-03)
 insert into Lead values('Mike', 'SMSCampaign', 'Crane', getdate()-10);			--> (2020-09-03)
 
 insert into Customer values('John Deere', '345 W MAdison St', 'Chicago', getdate()-11);	--> (2020-09-02)
@@ -406,9 +407,9 @@ truncate table customer;
 truncate table lead;
 truncate table users;
 
-insert into cfg values('Lead', 'CRM', getdate()-20, 1, 0);			--> (2020-08-24)
+insert into cfg values('Lead', 'CRM', getdate()-20, 1, 0);		--> (2020-08-24)
 insert into cfg values('Customer', 'CRM', getdate()-20, 1, 0);		--> (2020-08-24)
-insert into cfg values('Users', 'CRM', getdate()-20, 1, 0);			--> (2020-08-24)
+insert into cfg values('Users', 'CRM', getdate()-20, 1, 0);		--> (2020-08-24)
 
 -- Before run
 -- cfg
@@ -429,7 +430,7 @@ Users		CRM		2020-09-01 11:09:55.160		1		0
 -- (Incremental load)
 --------------------------------------------------------------------------------------
 -- SQL0318
-insert into Lead values('Lead1','EBS','Hydrolics', getdate()-9);	--> (2020-09-04)
+insert into Lead values('Lead1','EBS','Hydrolics', getdate()-9);		--> (2020-09-04)
 insert into Lead values('Lead2','BR','Crane', getdate()-9);			--> (2020-09-04)
 insert into Lead values('Lead3','BR','Crane', getdate()-5);			--> (2020-09-08)
 
@@ -510,16 +511,16 @@ Users3		22 Capricorn Ave		2020-09-08 11:25:48.327
 3. Datasets
 	* SODACrimeAPI
 		- Linked service 	: ChicagoCrime
-		- Data type			: Json
+		- Data type		: Json
 
 	* ChicagoCrimeFile
 		- Linked service	: LS_ADLS_0318
-		- File path			: demo / (blank) / ChicagoCrime.csv
+		- File path		: demo / (blank) / ChicagoCrime.csv
 		- First row header	: Checked
 
 	* DS_ASQL_CrimeData
 		- Linked service	: LS_SQL_0319
-		- Table				: (blank).CrimeData202009
+		- Table			: (blank).CrimeData202009
 
 3. Create pipeline
 	* CrimeDataPipe
@@ -670,16 +671,16 @@ GlobalParameters  :
 ----------------------------------------------------------------------------------------------------------------
 -- Blob
 Storage account name 	: nicholasblogstorage
-Account Kind 			: BlogStorage
-Location 				: East US
-Subscription 			: Free Trial
+Account Kind 		: BlogStorage
+Location 		: East US
+Subscription 		: Free Trial
 
 -- V2
 Storage account name 	: nicholasdatalakev2
-Account Kind 			: Storage V2
-Location 				: East US
-Subscription 			: Free Trial
-Hierarchy namespace		: Enabled
+Account Kind 		: Storage V2
+Location 		: East US
+Subscription 		: Free Trial
+Hierarchy namespace	: Enabled
 
 ----------------------------------------------------------------------------------------------------------------
 -- 008. Create Linked Service
@@ -694,7 +695,8 @@ PS C:\Users\Administrator> Set-Location 'C:\ADFv2QuickStartPSH'
 	"annotations": [],
 	"type": "AzureBlobStorage",
 	"typeProperties": {
-	"connectionString": "DefaultEndpointsProtocol=https;AccountName=nicholasblogstorage;AccountKey=ffdS0qu345MQOrE7AFqzwrVjpx9YMh0GyzwkaefOmtLyR6ZTS8qZxkc6CE2BOVGD2KhqNyp7QrwzAVg6HxDuYQ==;EndpointSuffix=core.windows.net"
+	"connectionString": "DefaultEndpointsProtocol=https;AccountName=nicholasblogstorage;AccountKey=ffdS0qu345MQOrE7AFqzwr
+				Vjpx9YMh0GyzwkaefOmtLyR6ZTS8qZxkc6CE2BOVGD2KhqNyp7QrwzAVg6HxDuYQ==;EndpointSuffix=core.windows.net"
 		}
 	}
 }
@@ -711,7 +713,8 @@ Set-AzDataFactoryV2LinkedService -DataFactoryName "NicholasADFQuickStartFactory"
 	"annotations": [],
 	"type": "AzureBlobStorage",
 	"typeProperties": {
-	"connectionString": "DefaultEndpointsProtocol=https;AccountName=nicholasdatalakev2;AccountKey=Vo8RiOuCwjqqm/dR9HbwqGA4k/gGrnQ2GbwrxFpx1Y3HaQPCzAXsTR28yRcfohjrga5wGODroHZGwAzuazaR5Q==;EndpointSuffix=core.windows.net"
+	"connectionString": "DefaultEndpointsProtocol=https;AccountName=nicholasdatalakev2;AccountKey=Vo8RiOuCwjqqm/dR9HbwqGA4k/g
+				GrnQ2GbwrxFpx1Y3HaQPCzAXsTR28yRcfohjrga5wGODroHZGwAzuazaR5Q==;EndpointSuffix=core.windows.net"
 		}
 	}
 }
@@ -894,9 +897,9 @@ Remove-AzDataFactoryV2 -Name $dataFactoryName -ResourceGroupName $resourceGroupN
 -- 012. Create Azure Data Factory Data Flow
 ----------------------------------------------------------------------------------------------------------------
 * Data Factory 	: NicholasDataFactory
-* Version		: V2
+* Version	: V2
 
-* Template		: Transform data using data flow
+* Template	: Transform data using data flow
 
 Copy data from Azure Blob storage to a database in
 Azure SQL Database by using Azure Data Factory
@@ -915,12 +918,12 @@ Azure SQL Database by using Azure Data Factory
 	Sharing 			->
 	Grant permission to another Data Factory ->
 	Select another ADF 	->
-	Add 				->
+	Add 			->
 	Copy Resource ID	->
 
 	Goto 'NicholasADFLab' ADF ->
-	IR 					->
-	New					->
+	IR 			->
+	New			->
 	Azure, Self-Hosted	->
 	Linked Self-Hosted	->
 	Name : Sharing-Self-IR ->
@@ -937,17 +940,17 @@ Azure SQL Database by using Azure Data Factory
 	* 3 DBs and same user ID/Password in this Lab
 
 3. Create Linked service	->
-	Name					-> LS_ASQL_Param
+	Name			-> LS_ASQL_Param
 	Account selection method -> Enter manually
-	Domain name				-> sqlserver0318.database.windows.net
+	Domain name		-> sqlserver0318.database.windows.net
 	Authentication type 	-> SQL Authentication
-	User name				-> serveradmin
-	Password				-> Dkagh0318
-	Parameters				-> dbName
-	Database name			-> Add dynamic content
-		Add					-> @linkedService().dbName
+	User name		-> serveradmin
+	Password		-> Dkagh0318
+	Parameters		-> dbName
+	Database name		-> Add dynamic content
+		Add		-> @linkedService().dbName
 	
-	* Check Code			->
+	* Check Code		->
 		{
 			"name": "LS_ASQL_Param",
 			"type": "Microsoft.DataFactory/factories/linkedservices",
@@ -960,8 +963,10 @@ Azure SQL Database by using Azure Data Factory
 				"annotations": [],
 				"type": "AzureSqlDatabase",
 				"typeProperties": {
-					"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=sqlserver0318.database.windows.net;initial catalog=@{linkedService().dbName};user id=serveradmin",
-					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZMDMxOF9kZmQ0NmFkOC05ZjIzLTRkOTctYmRkNC1kMmZjZmJlYjgxZjYiDQp9"
+					"connectionString": "integrated security=False;encrypt=True;connection timeout=30;
+						data source=sqlserver0318.database.windows.net;initial catalog=@{linkedService().dbName};user id=serveradmin",
+					"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRD
+						b250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZMDMxOF9kZmQ0NmFkOC05ZjIzLTRkOTctYmRkNC1kMmZjZmJlYjgxZjYiDQp9"
 				}
 			}
 		}
@@ -972,7 +977,7 @@ Azure SQL Database by using Azure Data Factory
 1. Link : https://www.youtube.com/watch?v=9XSJih4k-l8&list=PLMWaZteqtEaLTJffbbBzVOv9C0otal1FO&index=18
 
 2. Create dataset	->
-	Name			-> DS_ASQL_Source_Param
+	Name		-> DS_ASQL_Source_Param
 	Linked service	-> LS_ASQL_Param
 	OK
 
@@ -980,18 +985,18 @@ Azure SQL Database by using Azure Data Factory
 	New parameters	->
 		TableName
 		dbNameFromDataSet
-	Connection		->
-	dbName			-> @dataset().dbNameFromDataSet
-	Table			-> Edit
-	Schema			-> dbo
-	Table name 		-> @dataset().TableName
+	Connection	->
+	dbName		-> @dataset().dbNameFromDataSet
+	Table		-> Edit
+	Schema		-> dbo
+	Table name 	-> @dataset().TableName
 	
 --===========================================================================================================================
 -- Lab 11 : Parameterize Pipelines in ADF
 --===========================================================================================================================
 1. Link : https://www.youtube.com/watch?v=2u6Mo47A9JA&list=PLMWaZteqtEaLTJffbbBzVOv9C0otal1FO&index=19
 
-2. Create pipeline	->
+2. Create pipeline		->
 	Name			-> PL_COM_Parameterize
 	Create parameters	->
 		tblName_PL
@@ -1007,7 +1012,7 @@ Azure SQL Database by using Azure Data Factory
 		dbNameFromDataSet -> @pipeline().parameters.TGTdbName_PL
 
 3. Trigger now
-	tblName_PL		-> customer
+	tblName_PL	-> customer
 	SRCdbName_PL	-> SQL0318
 	TGTdbName_PL	-> SQL0319
 
@@ -1019,28 +1024,28 @@ Azure SQL Database by using Azure Data Factory
 2. Pipeline scope
 	@pipeline().DataFactory		Name of the data factory the pipeline run is running within
 	@pipeline().Pipeline 		Name of the pipeline
-	@pipeline().RunId 			ID of the specific pipeline run
+	@pipeline().RunId 		ID of the specific pipeline run
 	@pipeline().TriggerType 	Type of the trigger that invoked the pipeline (Manual, Scheduler)
 	@pipeline().TriggerId 		ID of the trigger that invokes the pipeline
 	@pipeline().TriggerName 	Name of the trigger that invokes the pipeline
 	@pipeline().TriggerTime 	Time when the trigger that invoked the pipeline.
-								The trigger time is the actual fired time, not the scheduled time.
-								For example, 13:20:08.0149599Z is returned instead of 13:20:00.00Z
+					The trigger time is the actual fired time, not the scheduled time.
+					For example, 13:20:08.0149599Z is returned instead of 13:20:00.00Z
 
 3. Schedule Trigger scope
 	@trigger().scheduledTime	Time when the trigger was scheduled to invoke the pipeline run.
-								For example, for a trigger that fires every 5 min, this variable would
-								return 2017-06-01T22:20:00Z, 2017-06-01T22:25:00Z, 2017-06-01T22:30:00Z respectively.
+					For example, for a trigger that fires every 5 min, this variable would
+					return 2017-06-01T22:20:00Z, 2017-06-01T22:25:00Z, 2017-06-01T22:30:00Z respectively.
 	@trigger().startTime		Time when the trigger actually fired to invoke the pipeline run.
-								For example, for a trigger that fires every 5 min, this variable might return something like
-								this 2017-06-01T22:20:00.4061448Z, 2017-06-01T22:25:00.7958577Z, 2017-06-01T22:30:00.9935483Z respectively.
-								(Note: The timestamp is by default in ISO 8601 format)
+					For example, for a trigger that fires every 5 min, this variable might return something like
+					this 2017-06-01T22:20:00.4061448Z, 2017-06-01T22:25:00.7958577Z, 2017-06-01T22:30:00.9935483Z respectively.
+					(Note: The timestamp is by default in ISO 8601 format)
 
 4. Tumbling Window Trigger scope
 	@trigger().outputs.windowStartTime	Start of the window when the trigger was scheduled to invoke the pipeline run.
-										If the tumbling window trigger has a frequency of "hourly" this would be the time at the beginning of the hour.
+						If the tumbling window trigger has a frequency of "hourly" this would be the time at the beginning of the hour.
 	@trigger().outputs.windowEndTime	End of the window when the trigger was scheduled to invoke the pipeline run.
-										If the tumbling window trigger has a frequency of "hourly" this would be the time at the end of the hour.
+						If the tumbling window trigger has a frequency of "hourly" this would be the time at the end of the hour.
 
 --===========================================================================================================================
 -- Lab 13 : Different Author Modes in ADF
@@ -1123,30 +1128,32 @@ Azure SQL Database by using Azure Data Factory
 3. Create Key Vault :
 	All resources	-> Add
 	Resource group	-> ASA_RG
-	Key Vault		-> 'KV-Nicholas-ADF'
-	Region			-> Australia east
+	Key Vault	-> 'KV-ADF-Nicholas'
+	Region		-> Australia east
 	Pricing tier	-> Standard
 	Create
 
 4. Apply to blob storage
-	open blob storage		-> blobstorage0318
-	Access key				->
+	open blob storage	-> blobstorage0318
+	Access key		->
 	Copy connection string	-> Key 1
-		DefaultEndpointsProtocol=https;AccountName=blobstorage0318;AccountKey=TMRw+KzSH9+7CE3DQlJ1nJ1s219CjNVwkAYTtWkCzjAyOFqyPoeeuG8z73l3as7n2RpviAUUXE8SaBNGcIH3Ug==;EndpointSuffix=core.windows.net
+		DefaultEndpointsProtocol=https;AccountName=blobstorage0318;AccountKey=TMRw+KzSH9+7CE3DQlJ1nJ1s219CjNVwkAYTtWkCzj
+		AyOFqyPoeeuG8z73l3as7n2RpviAUUXE8SaBNGcIH3Ug==;EndpointSuffix=core.windows.net
 
 	* Goto 'KV-Nicholas-ADF'
 	- Secrets :
-		Generate/Import			->
-		Upload options			-> Manual
-		Name					-> sec-blobstorage0318-connectionstring
-		Value					->
-			DefaultEndpointsProtocol=https;AccountName=blobstorage0318;AccountKey=TMRw+KzSH9+7CE3DQlJ1nJ1s219CjNVwkAYTtWkCzjAyOFqyPoeeuG8z73l3as7n2RpviAUUXE8SaBNGcIH3Ug==;EndpointSuffix=core.windows.net
+		Generate/Import		->
+		Upload options		-> Manual
+		Name			-> sec-blobstorage0318-connectionstring
+		Value			->
+			DefaultEndpointsProtocol=https;AccountName=blobstorage0318;AccountKey=TMRw+KzSH9+
+			7CE3DQlJ1nJ1s219CjNVwkAYTtWkCzjAyOFqyPoeeuG8z73l3as7n2RpviAUUXE8SaBNGcIH3Ug==;EndpointSuffix=core.windows.net
 		Create
 
 	- Access policy :
-		Add access policy		-> 
-		Secret permissions		-> Get / List
-		Select principal		-> NicholasADFLab
+		Add access policy	-> 
+		Secret permissions	-> Get / List
+		Select principal	-> NicholasADFLab
 		Add
 
 	Save
@@ -1158,10 +1165,10 @@ Azure SQL Database by using Azure Data Factory
 		Test connection
 
 	- Create Blog storage linked service
-		Name				-> LS_Blobstorage0318
-		Select 				-> 'Azure Key Vault'
+		Name			-> LS_Blobstorage0318
+		Select 			-> 'Azure Key Vault'
 		AKV linked service	-> LS_KV_BlobStorage0318
-		Secret name			-> sec-blobstorage0318-connectionstring
+		Secret name		-> sec-blobstorage0318-connectionstring
 		Test connection
 
 --===========================================================================================================================
@@ -1280,28 +1287,28 @@ Azure SQL Database by using Azure Data Factory
 		- Azure SQL	: LS_ASQL
 	
 	* Data sets
-		- Name				: DS_ADLS_CSV_Movies_Dynamic
+		- Name			: DS_ADLS_CSV_Movies_Dynamic
 		- Linked service 	: LS_ADLS
-		- Container			: csv
+		- Container		: csv
 		- Schema tab 		: Clear
 		- Parameters tab	: Add 2 parameters
 			- FolderName
 			- DelimiterSymbol
 		- Connection tab
-			- Folder 		: @dataset().FolderName
+			- Folder 	: @dataset().FolderName
 			- Column delimiter : Edit and @dataset().DelimiterSymbol
 		
-		- Name				: DS_ASQL_Movies_Dynamic
+		- Name			: DS_ASQL_Movies_Dynamic
 		- Linked service	: LS_ASQL
 		- Parameters tab	: Add 'TableName'
 		- Connection tab
-			- Table			: dbo + . + @dataset().TableName
+			- Table		: dbo + . + @dataset().TableName
 
 	* Pipeline
-		- Name				: 01-PL_MV_ADLS_ASQL_Multiple_Files
+		- Name			: 01-PL_MV_ADLS_ASQL_Multiple_Files
 
 		- Add Lookup Activity
-			- Name			: Lookup_Get_Metadata
+			- Name		: Lookup_Get_Metadata
 			- Settings
 				- Source data	: DS_ASQL_Movies_Dynamic
 				- Table name	: _notSet
@@ -1318,9 +1325,9 @@ Azure SQL Database by using Azure Data Factory
 					AND 	d.[SourceType] = 'Delimiter';
 
 		- Add ForEach Activity
-			- Name			: Loop over Metadata
+			- Name		: Loop over Metadata
 			- Sequential	: Unchecked
-			- Settings		: @activity('Lookup_Get_Metadata').output.value
+			- Settings	: @activity('Lookup_Get_Metadata').output.value
 
 			- Activity
 				- Add Copy Activity
@@ -1332,13 +1339,13 @@ Azure SQL Database by using Azure Data Factory
 						- Wildcard file path : *.csv
 					- Sink
 						- sink dataset		: DS_ASQL_Movies_Dynamic
-						- TableName			: @{item().SQLTable}
-						- Pre-copy			: truncate table dbo.@{item().SQLTable}
+						- TableName		: @{item().SQLTable}
+						- Pre-copy		: truncate table dbo.@{item().SQLTable}
 
 
 --#################################################################################################################################################################
 --#################################################################################################################################################################
--- 2. Azure Synapse Analytics							###########################################################################################################
+-- 2. Azure Synapse Analytics				###########################################################################################################
 --#################################################################################################################################################################
 --#################################################################################################################################################################
 
@@ -1353,22 +1360,22 @@ Azure SQL Database by using Azure Data Factory
 	- Provide end-to-end analytics with limitless scale
 
 3. Architecture
-	-------------------------------------------------------------------------------------------------------------
-	|	On-premises data |						Synapse Studio					  |								|
-	|	Cloud data		 |	==> Integration + Management + Monitoring + Security  |	==> Azure Machine Learning	|	
-	|	Saas data		 |														  |	    Power BI				|
-	|					 |						Analytics Runtimes												|
-	|					 |					--------------------------		  	  |								|
-	|					 |						  SQL		Spark				  |								|
-	|					 |					--------------------------			  |								|
-	|					 |					  Azure Data Lake Storage			  |								|
-	-------------------------------------------------------------------------------------------------------------
+	---------------------------------------------------------------------------------------------------------------------------------------------------------
+	|	On-premises data |						Synapse Studio					|				|
+	|	Cloud data	 |	==> Integration + Management + Monitoring + Security  					| ==> Azure Machine Learning	|	
+	|	Saas data	 |												|   Power BI			|
+	|			 |						Analytics Runtimes				|				|
+	|			 |					--------------------------		  	  	|				|
+	|			 |						  SQL		Spark				|				|
+	|			 |					--------------------------			  	|				|
+	|			 |					  Azure Data Lake Storage			  	|				|
+	---------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 4. Create Azure Synapse Analytics (formerly known as Azure SQL Data Warehouse)
 	- Subscription 		: Free trial
 	- Resource Group	: RG_ASA (new)
 	- SQL pool name		: Synapse0318
-	- Server			: sqlserver0318
+	- Server		: sqlserver0318
 	- Performance level	: Gen2 (DW100c : 2.07 AUD / hour)
 	- Additional settings : Use existing (Sample)
 
@@ -1382,16 +1389,16 @@ Azure SQL Database by using Azure Data Factory
 1. Link : MS_ASA_document_p19.pdf (22 pages)
 
 2. Create a Datalake storage
-	- Name				: datalake0318
+	- Name			: datalake0318
 	- Resource group 	: RG_ASA
-	- Type				: Gen2 (data lake)
+	- Type			: Gen2 (data lake)
 	- Containers		: users0318
 
 3. Create Azure Synapse Analytics (workspace preview)
 	- Subscription 		: Free trial
 	- Resource Group	: RG_ASA
 	- Workspace name	: workspace0318
-	- Region			: East US
+	- Region		: East US
 	- Datalake Storage	: datalake0318
 	- File system name	: users0318
 	- SQL On-demand 	: est. cost/TB (6.87 AUD)
@@ -1400,12 +1407,13 @@ Azure SQL Database by using Azure Data Factory
 3. Open Synapse Studio
 	- From Azure Portal
 	- web.azuresynapse.net
-	- https://web.azuresynapse.net/home?workspace=%2Fsubscriptions%2F3688f460-76ee-4b63-b2eb-fb1edd332e61%2FresourceGroups%2FRG_ASA%2Fproviders%2FMicrosoft.Synapse%2Fworkspaces%2Fworkspace0318
+	- https://web.azuresynapse.net/home?workspace=%2Fsubscriptions%2F3688f460-76ee-4b63-b2eb-fb1edd332e
+		61%2FresourceGroups%2FRG_ASA%2Fproviders%2FMicrosoft.Synapse%2Fworkspaces%2Fworkspace0318
 
 4. Create a SQL pool
 	- Synapse studio
 	- Manage -> SQL pools -> New
-		Name				: SQLDB1
+		Name			: SQLDB1
 		Performance level	: DW100C (2.07 AUD)
 	
 --===========================================================================================================================
@@ -1486,9 +1494,9 @@ ORDER BY passengerCount
 1. Link : MS_ASA_document_p19.pdf (27 pages)
 
 2. Data load using Apache Spark
-	- Data hub				-> Linked
+	- Data hub		-> Linked
 	- Azure Blob Storage	-> Sample Datasets
-	- nyc_tlc_yellow		-> New notebook
+	- nyc_tlc_yellow	-> New notebook
 	- Add to Notebook
 	
 -- Cell 1 : create a new Notebook
@@ -1541,7 +1549,7 @@ df.write.sqlanalytics("SQLDB1.dbo.PassengerCountStats", Constants.INTERNAL)
 
 --#################################################################################################################################################################
 --#################################################################################################################################################################
--- 3. Azure Databricks									###########################################################################################################
+-- 3. Azure Databricks					###########################################################################################################
 --#################################################################################################################################################################
 --#################################################################################################################################################################
 
@@ -1602,12 +1610,12 @@ df.write.sqlanalytics("SQLDB1.dbo.PassengerCountStats", Constants.INTERNAL)
 1. Link : https://www.youtube.com/watch?v=8oobJhnWp6k&list=PLMWaZteqtEaKi4WAePWtCSQCfQpvBT2U1&index=5
 
 2. Workspace Assets
-	- Clusters		: Set of computation resources and configurations
-	- Notebooks		: Web-based interface to documents containing a series of runnable cells (commands)
-	- Jobs			: Mechanism for running code in Azure Databricks
-	- Libraries		: Makes third-party or locally-built code available to notebooks and jobs running on your clusters
-	- Data			: You can import data into a distributed file system mounted into an Azure Databricks workspace
-					  and work with it in Azure Databricks notebooks and clusters
+	- Clusters	: Set of computation resources and configurations
+	- Notebooks	: Web-based interface to documents containing a series of runnable cells (commands)
+	- Jobs		: Mechanism for running code in Azure Databricks
+	- Libraries	: Makes third-party or locally-built code available to notebooks and jobs running on your clusters
+	- Data		: You can import data into a distributed file system mounted into an Azure Databricks workspace
+			  and work with it in Azure Databricks notebooks and clusters
 	- Experiments	: run MLflow machine learning model trainings
 
 --===========================================================================================================================
@@ -1616,9 +1624,9 @@ df.write.sqlanalytics("SQLDB1.dbo.PassengerCountStats", Constants.INTERNAL)
 1. Link : https://www.youtube.com/watch?v=lX0cLEAzMT4&list=PLMWaZteqtEaKi4WAePWtCSQCfQpvBT2U1&index=6
 
 2. Special folders
-	- Workspace	root folder : Root folder containing all objects
-	- Shared				: For sharing objects across your organization
-	- Users					: A folder for each user
+	- Workspace root folder : Root folder containing all objects
+	- Shared		: For sharing objects across your organization
+	- Users			: A folder for each user
 
 --===========================================================================================================================
 -- Lab 7 : Create and Run Spark Job in Databricks
@@ -1634,12 +1642,9 @@ df.write.sqlanalytics("SQLDB1.dbo.PassengerCountStats", Constants.INTERNAL)
 
 3. Run and see data
 
-
-
-
 --#################################################################################################################################################################
 --#################################################################################################################################################################
--- 4. SQL Server										###########################################################################################################
+-- 4. SQL Server					###########################################################################################################
 --#################################################################################################################################################################
 --#################################################################################################################################################################
 
@@ -1652,11 +1657,11 @@ df.write.sqlanalytics("SQLDB1.dbo.PassengerCountStats", Constants.INTERNAL)
 		| Premium : Sacle-out, Zone-redundant
 
 * vCore	 : Production
-		| General Purpose	| Provisioned															| Azure
-							| Serveless	(Compute resources are auto-scaled, Billed per second)		| Hybrid
-		| Hyperscale		| Secondary Replicas, Very large OLTP database							| Benefit
-		| Business Critical	| high transaction rate and lowest latency I/O,							| (55% discount)
-							  for Business critical system
+	| General Purpose	| Provisioned									| Azure
+				| Serveless	(Compute resources are auto-scaled, Billed per second)		| Hybrid
+	| Hyperscale		| Secondary Replicas, Very large OLTP database					| Benefit
+	| Business Critical	| high transaction rate and lowest latency I/O,					| (55% discount)
+				  for Business critical system
 
 ** DTU : We can just like the DTU to the horsepower in a car because it directly affects the performance of the database.
 		 DTU represents a mixture of the following performance metrics as a single performance unit for Azure SQL Database
@@ -1696,11 +1701,11 @@ df.write.sqlanalytics("SQLDB1.dbo.PassengerCountStats", Constants.INTERNAL)
   Database within the group (NickSQLDB) -> create -> take 5 mins
 * nicksqlserver -> failovergroupnick -> 
 	* Read/write listener endpoint 	: Application can use this URL to keep connection regardless of failover and changed DB Server
-									  Always point to primary server even after failover to change DB Server
-									  Single end point
-									  (failovergroupnick.database.windows.net)
+					  Always point to primary server even after failover to change DB Server
+					  Single end point
+					  (failovergroupnick.database.windows.net)
 	* Read-only listener endpoint 	: Same as but read-only access
-									  (failovergroupnick.secondary.database.windows.net)
+					  (failovergroupnick.secondary.database.windows.net)
 * nicksqlserver -> failovergroupnick -> failover -> check DB connection
 * Geo-Replication applied this change automatically
 
@@ -1832,8 +1837,10 @@ where	c.CustomerID = 123
 
 select c.CustomerID,    c.AccountNumber  from sales.Customer c  where c.CustomerID = 123  ;
   |--Compute Scalar(DEFINE:([c].[AccountNumber]=[AdventureWorks2012].[Sales].[Customer].[AccountNumber] as [c].[AccountNumber]))
-       |--Compute Scalar(DEFINE:([c].[AccountNumber]=isnull('AW'+[AdventureWorks2012].[dbo].[ufnLeadingZeros]([AdventureWorks2012].[Sales].[Customer].[CustomerID] as [c].[CustomerID]),'')))
-            |--Clustered Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[PK_Customer_CustomerID] AS [c]), SEEK:([c].[CustomerID]=CONVERT_IMPLICIT(int,[@1],0)) ORDERED FORWARD)
+       |--Compute Scalar(DEFINE:([c].[AccountNumber]=isnull('AW'+[AdventureWorks2012].[dbo].[ufnLeadingZeros]
+       		([AdventureWorks2012].[Sales].[Customer].[CustomerID] as [c].[CustomerID]),'')))
+            |--Clustered Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[PK_Customer_CustomerID]
+	    	AS [c]), SEEK:([c].[CustomerID]=CONVERT_IMPLICIT(int,[@1],0)) ORDERED FORWARD)
 
 -----------------------------------------------------------------------------------------------
 -- Nonclustered Index
@@ -1858,8 +1865,10 @@ where	c.PersonID = 20613
 
 select c.PersonID,    c.TerritoryID,    c.StoreID  from sales.Customer c  where c.PersonID = 20613
   |--Nested Loops(Inner Join, OUTER REFERENCES:([c].[CustomerID]))
-       |--Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[IX_Customer_PersonID_TerritoryID] AS [c]), SEEK:([c].[PersonID]=(20613)) ORDERED FORWARD)
-       |--Clustered Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[PK_Customer_CustomerID] AS [c]), SEEK:([c].[CustomerID]=[AdventureWorks2012].[Sales].[Customer].[CustomerID] as [c].[CustomerID]) LOOKUP ORDERED FORWARD)
+       |--Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[IX_Customer_PersonID_TerritoryID]
+       		AS [c]), SEEK:([c].[PersonID]=(20613)) ORDERED FORWARD)
+       |--Clustered Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[PK_Customer_CustomerID]
+       		AS [c]), SEEK:([c].[CustomerID]=[AdventureWorks2012].[Sales].[Customer].[CustomerID] as [c].[CustomerID]) LOOKUP ORDERED FORWARD)
 
 select	c.PersonID,
 		c.TerritoryID,
@@ -1869,7 +1878,9 @@ where	c.PersonID between 1 and 20613
 ;
 
 select c.PersonID,    c.TerritoryID,    c.StoreID  from sales.Customer c  where c.PersonID between 1 and 20613
-  |--Clustered Index Scan(OBJECT:([AdventureWorks2012].[Sales].[Customer].[PK_Customer_CustomerID] AS [c]), WHERE:([AdventureWorks2012].[Sales].[Customer].[PersonID] as [c].[PersonID]>=(1) AND [AdventureWorks2012].[Sales].[Customer].[PersonID] as [c].[PersonID]<=(20613)))
+  |--Clustered Index Scan(OBJECT:([AdventureWorks2012].[Sales].[Customer].[PK_Customer_CustomerID] AS [c]),
+  	WHERE:([AdventureWorks2012].[Sales].[Customer].[PersonID] as [c].[PersonID]>=(1)
+		AND [AdventureWorks2012].[Sales].[Customer].[PersonID] as [c].[PersonID]<=(20613)))
 
 select	c.PersonID,
 		c.TerritoryID
@@ -1878,7 +1889,8 @@ where	c.PersonID between 20000 and 20613
 ;
 
 select c.PersonID,    c.TerritoryID  from sales.Customer c  where c.PersonID between 20000 and 20613  ;
-  |--Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[IX_Customer_PersonID_TerritoryID] AS [c]), SEEK:([c].[PersonID] >= CONVERT_IMPLICIT(int,[@1],0) AND [c].[PersonID] <= CONVERT_IMPLICIT(int,[@2],0)) ORDERED FORWARD)
+  |--Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[IX_Customer_PersonID_TerritoryID] AS [c]),
+  	SEEK:([c].[PersonID] >= CONVERT_IMPLICIT(int,[@1],0) AND [c].[PersonID] <= CONVERT_IMPLICIT(int,[@2],0)) ORDERED FORWARD)
  
 ------------------------------------------------------------------------------------------
 -- Including Non-Key columns (Covering index)
@@ -1903,7 +1915,8 @@ where	c.PersonID between 1 and 20613
 ;
 
 select c.PersonID,    c.TerritoryID,    c.StoreID  from sales.Customer c  where c.PersonID between 1 and 20613
-  |--Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[IX_Customer_PersonID_TerritoryID_Store_ID] AS [c]), SEEK:([c].[PersonID] >= (1) AND [c].[PersonID] <= (20613)) ORDERED FORWARD)
+  |--Index Seek(OBJECT:([AdventureWorks2012].[Sales].[Customer].[IX_Customer_PersonID_TerritoryID_Store_ID] AS [c]),
+  	SEEK:([c].[PersonID] >= (1) AND [c].[PersonID] <= (20613)) ORDERED FORWARD)
   
 --===========================================================================================================================
 -- Lab 7 : Azure SQL Database - Table Partitioning
@@ -1914,7 +1927,7 @@ select c.PersonID,    c.TerritoryID,    c.StoreID  from sales.Customer c  where 
 1. Link : https://www.mssqltips.com/sqlservertip/3494/azure-sql-database--table-partitioning/
 
 2. Scenario : Calculate and store the primes numbers from 1 to 1 million with ten data partitions.
-			  Thus, the primes numbers will be hashed in buckets at every one hundred thousand mark
+	      Thus, the primes numbers will be hashed in buckets at every one hundred thousand mark
 
 3. Create databaes MATH
 USE [master]
@@ -2023,7 +2036,7 @@ begin
 end;
 
 9. create a procedure that takes a starting and ending value as input and calculates
-	And stores primes numbers between those two values as output
+   And stores primes numbers between those two values as output
 
 if exists
 	(
@@ -2122,7 +2135,10 @@ where	my_value = 61027
 
 StmtText
 select *  from tbl_primes  where my_value = 61027
-  |--Clustered Index Seek(OBJECT:([MATH].[dbo].[Tbl_Primes].[PK_Tbl_Primes]), SEEK:([PtnId1000]=RangePartitionNew(CONVERT_IMPLICIT(bigint,[@1],0),(0),(100000),(200000),(300000),(400000),(500000),(600000),(700000),(800000),(900000)) AND [MATH].[dbo].[Tbl_Primes].[My_Value]=CONVERT_IMPLICIT(bigint,[@1],0)) ORDERED FORWARD)
+  |--Clustered Index Seek(OBJECT:([MATH].[dbo].[Tbl_Primes].[PK_Tbl_Primes]),
+  	SEEK:([PtnId1000]=RangePartitionNew(CONVERT_IMPLICIT(bigint,[@1],0),(0),
+	(100000),(200000),(300000),(400000),(500000),(600000),(700000),(800000),(900000)) AND
+	[MATH].[dbo].[Tbl_Primes].[My_Value]=CONVERT_IMPLICIT(bigint,[@1],0)) ORDERED FORWARD)
 
 set showplan_all off
 
