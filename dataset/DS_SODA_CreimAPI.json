@@ -1,0 +1,16 @@
+{
+	"name": "DS_SODA_CreimAPI",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_HTTP_ChicagoCrime",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation"
+			}
+		}
+	}
+}
