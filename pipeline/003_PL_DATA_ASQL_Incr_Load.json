@@ -247,7 +247,7 @@
 												"referenceName": "DS_ASQL0319_CFG",
 												"type": "DatasetReference"
 											},
-											"firstRowOnly": false
+											"firstRowOnly": true
 										}
 									},
 									{
