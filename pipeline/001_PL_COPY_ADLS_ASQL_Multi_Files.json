@@ -1,5 +1,5 @@
 {
-	"name": "001_PL_MV_ADLS_ASQL_Multiple_Files",
+	"name": "001_PL_COPY_ADLS_ASQL_Multi_Files",
 	"properties": {
 		"description": "Load multiple csv files in data lake with different file names and delimiters\n\nLink : \nhttps://www.mssqltips.com/sqlservertip/6281/how-to-load-multiple-files-in-parallel-in-azure-data-factory--part-1/\nhttps://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example--part-2/",
 		"activities": [
