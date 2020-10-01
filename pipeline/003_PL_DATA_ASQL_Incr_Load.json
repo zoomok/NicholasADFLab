@@ -1,6 +1,399 @@
 {
 	"name": "003_PL_DATA_ASQL_Incr_Load",
 	"properties": {
-		"description": "Full or Incremental data load from 0318 (Source) to 0319 (Staging)",
+		"description": "Full or Incremental data load from 0318 (Source) to 0319 (Staging)\n\nLink : https://www.udemy.com/course/implementing-real-world-use-cases-in-azure-data-factory-v2/learn/lecture/19940682#overview",
+		"activities": [
+			{
+				"name": "Load Enabled from 0319",
+				"description": "Read Enabled load table from CFG table in 0319 (Staging DB)",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select * from cfg where enabled = 1",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_ASQL0319_CFG",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Filter CRM",
+				"description": "Filter 'CRM' source from CFG table",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Load Enabled from 0319",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Load Enabled from 0319').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().Source,'CRM')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach Data Load",
+				"description": "If 'Full Load'",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter CRM",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter CRM').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "If Full or Incremental",
+							"description": "True (1) -> Incremental Load\nFalse (0) -> Full Load",
+							"type": "IfCondition",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@bool(equals(item().Incremental_Full_Load,1))",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Copy SRC0318 to STG0319 Full Load",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "select * from @{item().Table_Name}",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"preCopyScript": "truncate table @{item().Table_Name}",
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_ASQL0318_Table",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DS_ASQL0319_Table_Param",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": "dbo",
+													"table": {
+														"value": "@{item().Table_Name}",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									},
+									{
+										"name": "Get Max Update date from Actual Table",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "Copy SRC0318 to STG0319 Full Load",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": "select max(last_updated_date) as maxD\nfrom @{item().Table_Name}",
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_Table_Param",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": "dbo",
+													"table": {
+														"value": "@{item().Table_Name}",
+														"type": "Expression"
+													}
+												}
+											}
+										}
+									},
+									{
+										"name": "Update CFG table",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "Get Max Update date from Actual Table",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "update CFG set Max_LastUpdatedDate = '@{activity('Get Max Update date from Actual Table').output.firstRow.maxD}' where table_name like '@{item().Table_Name}'\nselect '1'",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_CFG",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": true
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Incr Load - Get Max LastUpdated CFG",
+										"description": "Get Max_LastUpdatedDate from CFG table",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "select max_lastupdateddate from cfg where table_name = '@{item().Table_name}'",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_CFG",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": true
+										}
+									},
+									{
+										"name": "Copy SRC-0318 to STG-0319",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Incr Load - Get Max LastUpdated CFG",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "select  *\nfrom @{item().Table_Name}\nwhere convert(varchar(max), last_updated_date, 120) >\nconvert(varchar(max), substring(replace('@{activity('Incr Load - Get Max LastUpdated CFG').output.firstrow.max_lastupdateddate}', 'T', ' '), 0, 20), 120)",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"sink": {
+												"type": "AzureSqlSink"
+											},
+											"enableStaging": false,
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "DS_ASQL0318_Table",
+												"type": "DatasetReference"
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "DS_ASQL0319_Table_Param",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": "dbo",
+													"table": "@{item().Table_Name}"
+												}
+											}
+										]
+									},
+									{
+										"name": "Get Max Update date from Actual Tables",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "Copy SRC-0318 to STG-0319",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "select max(Last_Updated_Date) as maxD from @{item().Table_Name}",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_Table_Param",
+												"type": "DatasetReference",
+												"parameters": {
+													"schema": "dbo",
+													"table": {
+														"value": "@{item().Table_Name}",
+														"type": "Expression"
+													}
+												}
+											},
+											"firstRowOnly": true
+										}
+									},
+									{
+										"name": "Update Max_LastUpdate in CFG",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "Get Max Update date from Actual Tables",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "update cfg set max_lastupdateddate = '@{activity('Get Max Update date from Actual Tables').output.firstrow.maxD}' where table_name = '@item().Table_Name'\nselect '1'",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "DS_ASQL0319_Table",
+												"type": "DatasetReference"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			}
+		],
 		"annotations": []
 	}
+}
