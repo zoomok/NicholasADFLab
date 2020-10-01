@@ -1,0 +1,24 @@
+{
+	"name": "SourceCrimeCSV",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ADLS_CSV_ChicagoCrime",
+						"type": "DatasetReference"
+					},
+					"name": "CrimeDataFile"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "ExtractDateTime"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CrimeDataFile\nCrimeDataFile derive({} = ERROR_FUNCTION('')) ~> ExtractDateTime"
+		}
+	}
+}
