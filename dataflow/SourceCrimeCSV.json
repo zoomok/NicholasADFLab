@@ -16,9 +16,12 @@
 			"transformations": [
 				{
 					"name": "ExtractDateTime"
+				},
+				{
+					"name": "DayOfWeekCount"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CrimeDataFile\nCrimeDataFile derive({} = ERROR_FUNCTION('')) ~> ExtractDateTime"
+			"script": "source(output(\n\t\tid as integer,\n\t\tcase_number as string,\n\t\tdate as string,\n\t\tblock as string,\n\t\tiucr as string,\n\t\tprimary_type as string,\n\t\tdescription as string,\n\t\tlocation_description as string,\n\t\tarrest as boolean,\n\t\tdomestic as boolean,\n\t\tbeat as short,\n\t\tdistrict as short,\n\t\tward as short,\n\t\tcommunity_area as short,\n\t\tfbi_code as string,\n\t\tyear as short,\n\t\tupdated_on as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> CrimeDataFile\nCrimeDataFile derive(Date = left(date,10),\n\t\tTime = right(date, 8)) ~> ExtractDateTime\nExtractDateTime aggregate(groupBy(DayOfWeek = dayOfWeek(toDate(ExtractDateTime@Date, 'yyyy-mm-dd')))) ~> DayOfWeekCount"
 		}
 	}
 }
