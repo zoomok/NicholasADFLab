@@ -4,7 +4,7 @@
 		"description": "1. Get Chicago crime data from https://data.cityofchicago.org/resource/crimes.json?$limit=50000\n2. Copy data to data lake as csv file\n3. From csv file, extract DayOfWeekCount and save aggregation data to Azure database\n\nLink : None",
 		"activities": [
 			{
-				"name": "Copy Http CSV file to ADLS",
+				"name": "Copy Http JSON file to ADLS CSV",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
