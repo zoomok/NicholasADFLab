@@ -6,327 +6,12 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "datafactory-0318"
-		},
-		"LS_ADLS_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'LS_ADLS'"
-		},
-		"LS_ASQL0318_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0318'"
-		},
-		"LS_ASQL0319_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0319'"
-		},
-		"LS_ADLS_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://datalake0318.dfs.core.windows.net"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_ADLS')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('LS_ADLS_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('LS_ADLS_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_ASQL0318')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_ASQL0318_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_ASQL0319')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"connectionString": "[parameters('LS_ASQL0319_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ADLS_CSV_Movies_Dynamic')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_ADLS",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"FolderName": {
-						"type": "string"
-					},
-					"DelimiterSymbol": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().FolderName",
-							"type": "Expression"
-						},
-						"fileSystem": "csv"
-					},
-					"columnDelimiter": {
-						"value": "@dataset().DelimiterSymbol",
-						"type": "Expression"
-					},
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_Movies_Dynamic')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0318",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"TableName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset for general purpose and 0318 tables",
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0318",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_Table_Param')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset using SchemaName.TableName",
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0318",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"SchemaName": {
-						"type": "string"
-					},
-					"TableName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().SchemaName",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().TableName",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0318_VW_TableList_P')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0318",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "sch",
-						"type": "nvarchar"
-					},
-					{
-						"name": "tbl",
-						"type": "nvarchar"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "VW_TableList_P"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0318')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_CFG')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0319",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "Table_Name",
-						"type": "varchar"
-					},
-					{
-						"name": "Source",
-						"type": "varchar"
-					},
-					{
-						"name": "Max_LastUpdatedDate",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "Enabled",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "Incremental_Full_Load",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "cfg"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_Table')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Dataset for general purpose and 0319 tables",
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0319",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_Table_Param')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_ASQL0319",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"schema": {
-						"type": "string"
-					},
-					"table": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": {
-						"value": "@dataset().schema",
-						"type": "Expression"
-					},
-					"table": {
-						"value": "@dataset().table",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"
-			]
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/001_PL_MV_ADLS_ASQL_Multiple_Files')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -452,10 +137,7 @@
 				],
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_Movies_Dynamic')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_CSV_Movies_Dynamic')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/002_PL_DATA_ASQL_ForEach')]",
@@ -485,8 +167,7 @@
 							},
 							"dataset": {
 								"referenceName": "DS_ASQL0318_VW_TableList_P",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": false
 						}
@@ -624,12 +305,7 @@
 				],
 				"annotations": []
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_VW_TableList_P')]",
-				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_Table_Param')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_Table_Param')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/003_PL_DATA_ASQL_Incr_Load')]",
@@ -660,8 +336,7 @@
 							},
 							"dataset": {
 								"referenceName": "DS_ASQL0319_CFG",
-								"type": "DatasetReference",
-								"parameters": {}
+								"type": "DatasetReference"
 							},
 							"firstRowOnly": false
 						}
@@ -765,8 +440,7 @@
 												"inputs": [
 													{
 														"referenceName": "DS_ASQL0318_Table",
-														"type": "DatasetReference",
-														"parameters": {}
+														"type": "DatasetReference"
 													}
 												],
 												"outputs": [
@@ -856,8 +530,7 @@
 													},
 													"dataset": {
 														"referenceName": "DS_ASQL0319_CFG",
-														"type": "DatasetReference",
-														"parameters": {}
+														"type": "DatasetReference"
 													},
 													"firstRowOnly": true
 												}
@@ -889,8 +562,7 @@
 													},
 													"dataset": {
 														"referenceName": "DS_ASQL0319_CFG",
-														"type": "DatasetReference",
-														"parameters": {}
+														"type": "DatasetReference"
 													},
 													"firstRowOnly": true
 												}
@@ -940,8 +612,7 @@
 												"inputs": [
 													{
 														"referenceName": "DS_ASQL0318_Table",
-														"type": "DatasetReference",
-														"parameters": {}
+														"type": "DatasetReference"
 													}
 												],
 												"outputs": [
@@ -1029,8 +700,7 @@
 													},
 													"dataset": {
 														"referenceName": "DS_ASQL0319_Table",
-														"type": "DatasetReference",
-														"parameters": {}
+														"type": "DatasetReference"
 													}
 												}
 											}
@@ -1044,11 +714,52 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_CFG')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0318_Table')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_Table_Param')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_Table')]"
+				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_CFG')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_CFG')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ASQL0319",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Table_Name",
+						"type": "varchar"
+					},
+					{
+						"name": "Source",
+						"type": "varchar"
+					},
+					{
+						"name": "Max_LastUpdatedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Enabled",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Incremental_Full_Load",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "cfg"
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
