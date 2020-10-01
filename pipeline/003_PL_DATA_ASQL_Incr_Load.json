@@ -375,7 +375,7 @@
 											"source": {
 												"type": "AzureSqlSource",
 												"sqlReaderQuery": {
-													"value": "update cfg set max_lastupdateddate = @{activity('Get Max Update date from Actual Tables').output.firstrow.maxD} where table_name = '@item().Table_Name'\nselect '1'",
+													"value": "update cfg set max_lastupdateddate = '@{activity('Get Max Update date from Actual Tables').output.firstrow.maxD}' where table_name = '@item().Table_Name'\nselect '1'",
 													"type": "Expression"
 												},
 												"queryTimeout": "02:00:00",
