@@ -1,5 +1,5 @@
 {
-	"name": "SourceDataset_suk",
+	"name": "DS_ADLS_FTH_TransactionHistory",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_ADLS",

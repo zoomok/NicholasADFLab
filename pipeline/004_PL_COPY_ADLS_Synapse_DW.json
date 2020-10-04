@@ -102,7 +102,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_suk",
+						"referenceName": "DS_ADLS_FTH_TransactionHistory",
 						"type": "DatasetReference"
 					}
 				],
