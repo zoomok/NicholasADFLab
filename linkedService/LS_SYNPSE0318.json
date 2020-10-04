@@ -1,0 +1,12 @@
+{
+	"name": "LS_SYNPSE0318",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=sqlserver0318.database.windows.net;initial catalog=Synapse0318;user id=serveradmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZLTAzMThfYjkwYjQ1YWUtMzNjNC00MTgxLWFmNjItOWFlMjk3ZGM2NTU0Ig0KfQ=="
+		}
+	}
+}

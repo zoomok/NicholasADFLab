@@ -1,0 +1,44 @@
+{
+	"name": "DS_SYNPSE_FactTransactionHistoryADF",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SYNPSE0318",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [
+			{
+				"name": "TransactionID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ProductKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "OrderDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "Quantity",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ActualCost",
+				"type": "money",
+				"precision": 19,
+				"scale": 4
+			}
+		],
+		"typeProperties": {
+			"schema": "prod",
+			"table": "FactTransactionHistoryADF"
+		}
+	}
+}
