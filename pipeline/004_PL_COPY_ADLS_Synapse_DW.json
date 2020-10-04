@@ -4,7 +4,7 @@
 		"description": "Load FactTransactionHistory in datalake to Azure DW using Azure Data Factory\n\nLink : https://www.udemy.com/course/azure-sql-data-warehouse-synapse-analytics-service/learn/lecture/18542416#overview",
 		"activities": [
 			{
-				"name": "Copy_suk",
+				"name": "Copy_FTH_TransactionFile_To_Synapse",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
