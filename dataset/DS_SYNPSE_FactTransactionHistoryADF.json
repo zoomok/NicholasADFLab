@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_suk",
+	"name": "DS_SYNPSE_FactTransactionHistoryADF",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_SYNPSE0318",

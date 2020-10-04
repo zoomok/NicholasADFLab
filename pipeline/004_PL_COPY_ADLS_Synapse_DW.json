@@ -108,7 +108,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_suk",
+						"referenceName": "DS_SYNPSE_FactTransactionHistoryADF",
 						"type": "DatasetReference"
 					}
 				]
