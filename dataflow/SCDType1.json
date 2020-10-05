@@ -1,12 +1,31 @@
 {
-	"name": "Mapping Data Flow",
+	"name": "SCDType1",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
-			"sources": [],
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL0318_SalesRep",
+						"type": "DatasetReference"
+					},
+					"name": "SalesRepSTG"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_ASQL0319_DimSalesRep",
+						"type": "DatasetReference"
+					},
+					"name": "DimSalesRepSCD1"
+				}
+			],
 			"sinks": [],
-			"transformations": [],
-			"script": ""
+			"transformations": [
+				{
+					"name": "Exists1"
+				}
+			],
+			"script": "source(output(\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SalesRepSTG\nsource(output(\n\t\tSalesRep_Key as integer,\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> DimSalesRepSCD1\nSalesRepSTG, DimSalesRepSCD1 exists(SalesRepSTG@SalesRep_Number == DimSalesRepSCD1@SalesRep_Number,\n\tnegate:false,\n\tbroadcast: 'auto')~> Exists1"
 		}
 	}
 }
