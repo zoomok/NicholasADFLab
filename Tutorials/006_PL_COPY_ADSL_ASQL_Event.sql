@@ -15,6 +15,9 @@
     - container : salesevent
 
 4. Scenario
-    - The pipeline '006_PL_COPY_ADSL_ASQL_Event' should be kicked-off automatically, in response to each file drop event and will transfer data related to that specific file. Therefore, in our case we should see three executions, matching the count of CSV files.
+    - The pipeline '006_PL_COPY_ADSL_ASQL_Event' should be kicked-off automatically,
+        in response to each file drop event and will transfer data related to that specific file.
+    - Therefore, in our case we should see three executions, matching the count of CSV files.
+    - Make this trigger a bit smarter to initiate each execution with specific parameters,
+        indicating which file has caused this execution, so the pipeline transfers data for the related file only.
 
-The pipeline Blob_SQL_PL we have built so far, transfers data for all CSV files located in its source container. However, I want to make this trigger a bit smarter to initiate each execution with specific parameters, indicating which file has caused this execution, so the pipeline transfers data for the related file only.
