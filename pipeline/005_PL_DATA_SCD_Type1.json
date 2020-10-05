@@ -1,0 +1,32 @@
+{
+	"name": "005_PL_DATA_SCD_Type1",
+	"properties": {
+		"description": "https://www.udemy.com/course/implementing-real-world-use-cases-in-azure-data-factory-v2/learn/lecture/19940714#overview\nhttps://www.udemy.com/course/implementing-real-world-use-cases-in-azure-data-factory-v2/learn/lecture/19940726#overview",
+		"activities": [
+			{
+				"name": "Copy STG-SQL0318 to PROD-SQL0319",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "Mapping Data Flow",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
