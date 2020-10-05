@@ -1,0 +1,27 @@
+{
+	"name": "MyEventTrigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "006_PL_COPY_ADSL_ASQL_Event",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SourceFile": "@triggerBody().fileName"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/salesevent/blobs/.csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
