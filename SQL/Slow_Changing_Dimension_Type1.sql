@@ -25,3 +25,15 @@ create table dbo.Dim_SalesRep
 )
 ;
 
+-- Test
+1. Run ADF (initial load)
+2. Update/Insert STG
+
+update	stg_sqles_rep
+set		sallesRep_Department = 'IT'
+where	salesRep_number = 2;
+
+insert into STG_Sales_Rep values
+(5,'Nick','Sales');
+
+3. Run ADF (SCD Type1)
