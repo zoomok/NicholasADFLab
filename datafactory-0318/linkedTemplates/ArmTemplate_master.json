@@ -35,6 +35,14 @@
 			"type": "string",
 			"defaultValue": "https://KV-ADF-Nicholas.vault.azure.net/"
 		},
+		"MyEventTrigger_properties_006_PL_COPY_ADSL_ASQL_Event_parameters_SourceFile": {
+			"type": "string",
+			"defaultValue": "@triggerBody().fileName"
+		},
+		"MyEventTrigger_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -79,9 +87,6 @@
 					},
 					"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
 						"value": "[parameters('LS_KV_BlobStorage0318_properties_typeProperties_baseUrl')]"
-					},
-					"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('LS_ABLB_KV_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -100,6 +105,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('LS_ABLB_KV_properties_typeProperties_connectionString_secretName')]"
+					},
+					"MyEventTrigger_properties_006_PL_COPY_ADSL_ASQL_Event_parameters_SourceFile": {
+						"value": "[parameters('MyEventTrigger_properties_006_PL_COPY_ADSL_ASQL_Event_parameters_SourceFile')]"
+					},
+					"MyEventTrigger_properties_typeProperties_scope": {
+						"value": "[parameters('MyEventTrigger_properties_typeProperties_scope')]"
 					}
 				}
 			},

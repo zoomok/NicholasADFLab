@@ -26,6 +26,12 @@
 		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
 			"value": "https://KV-ADF-Nicholas.vault.azure.net/"
 		},
+		"MyEventTrigger_properties_006_PL_COPY_ADSL_ASQL_Event_parameters_SourceFile": {
+			"value": "@triggerBody().fileName"
+		},
+		"MyEventTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318"
+		},
 		"containerUri": {
 			"value": ""
 		},
