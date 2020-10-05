@@ -43,7 +43,10 @@
 						"referenceName": "DS_ADLS_CSV_Event",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileName": "@pipeline().parameters.SourceFile"
+							"FileName": {
+								"value": "@pipeline().parameters.SourceFile",
+								"type": "Expression"
+							}
 						}
 					}
 				],
