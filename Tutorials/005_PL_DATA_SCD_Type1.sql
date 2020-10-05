@@ -16,5 +16,4 @@ https://www.udemy.com/course/implementing-real-world-use-cases-in-azure-data-fac
     - Azure Synapse Analytics
     - Azure SQL Database
     - Azure CosmosDB
-    
-5. 
+   
