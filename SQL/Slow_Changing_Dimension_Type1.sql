@@ -1,0 +1,27 @@
+-- SQL0318
+create table dbo.STG_Sales_Rep
+(
+	SalesRep_Number 	int,
+	SalesRep_Name 		varchar(maX),
+	SalesRep_Department varchar(max)
+)
+;
+
+insert into STG_Sales_Rep values
+(1,'Michael','Finance')
+;
+
+insert into STG_Sales_Rep values
+(2,'John','HR')
+;
+
+-- SQL0319
+create table dbo.Dim_SalesRep
+(
+	SalesRep_Key 	int identity(1,1) ,
+	SalesRep_Number int,
+	SalesRep_Name 	varchar(max),
+	SalesRep_Department varchar(max)
+)
+;
+
