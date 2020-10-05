@@ -29,11 +29,14 @@ create table dbo.Dim_SalesRep
 1. Run ADF (initial load)
 2. Update/Insert STG
 
-update	stg_sqles_rep
-set		sallesRep_Department = 'IT'
-where	salesRep_number = 2;
+-- SQL0318
+update	stg_sales_rep
+set		salesRep_Department = 'IT'
+where	salesRep_number = 2
+;
 
 insert into STG_Sales_Rep values
-(5,'Nick','Sales');
+(5,'Nick','Sales')
+;
 
-3. Run ADF (SCD Type1)
+3. Run ADF (SCD Type1) and check Dim_SalesRep 
