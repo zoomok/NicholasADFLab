@@ -1,5 +1,5 @@
 --===========================================================================================================================
--- Lab 20 : How to Load Multiple Files in Parallel in Azure Data Factory - Part 1
+-- Lab 1 : How to Load Multiple Files in Parallel in Azure Data Factory - Part 1
 --===========================================================================================================================
 1. Link : https://www.mssqltips.com/sqlservertip/6281/how-to-load-multiple-files-in-parallel-in-azure-data-factory--part-1/
           https://www.mssqltips.com/sqlservertip/6282/azure-data-factory-multiple-file-load-example--part-2/
