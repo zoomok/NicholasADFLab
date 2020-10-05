@@ -1,3 +1,5 @@
-Copy multiple tables using Filter
+--===========================================================================================================================
+-- Lab 2 : Copy multiple tables using Filter
+--===========================================================================================================================
 
-Link ; https://www.mssqltips.com/sqlservertip/6187/azure-data-factory-foreach-activity-example/
+Link : https://www.mssqltips.com/sqlservertip/6187/azure-data-factory-foreach-activity-example/
