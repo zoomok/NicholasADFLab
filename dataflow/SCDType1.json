@@ -19,13 +19,24 @@
 					"name": "DimSalesRepSCD1"
 				}
 			],
-			"sinks": [],
-			"transformations": [
+			"sinks": [
 				{
-					"name": "Exists1"
+					"dataset": {
+						"referenceName": "DS_ASQL0319_DimSalesRep",
+						"type": "DatasetReference"
+					},
+					"name": "Insert"
 				}
 			],
-			"script": "source(output(\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SalesRepSTG\nsource(output(\n\t\tSalesRep_Key as integer,\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> DimSalesRepSCD1\nSalesRepSTG, DimSalesRepSCD1 exists(SalesRepSTG@SalesRep_Number == DimSalesRepSCD1@SalesRep_Number,\n\tnegate:false,\n\tbroadcast: 'auto')~> Exists1"
+			"transformations": [
+				{
+					"name": "IfExistsThenUpdate"
+				},
+				{
+					"name": "IfNotExistsThenInsert"
+				}
+			],
+			"script": "source(output(\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> SalesRepSTG\nsource(output(\n\t\tSalesRep_Key as integer,\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> DimSalesRepSCD1\nSalesRepSTG, DimSalesRepSCD1 exists(SalesRepSTG@SalesRep_Number == DimSalesRepSCD1@SalesRep_Number,\n\tnegate:false,\n\tbroadcast: 'auto')~> IfExistsThenUpdate\nSalesRepSTG, DimSalesRepSCD1 exists(SalesRepSTG@SalesRep_Number == DimSalesRepSCD1@SalesRep_Number,\n\tnegate:true,\n\tbroadcast: 'auto')~> IfNotExistsThenInsert\nIfNotExistsThenInsert sink(input(\n\t\tSalesRep_Key as integer,\n\t\tSalesRep_Number as integer,\n\t\tSalesRep_Name as string,\n\t\tSalesRep_Department as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Insert"
 		}
 	}
 }
