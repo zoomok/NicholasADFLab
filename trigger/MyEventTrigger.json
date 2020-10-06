@@ -2,7 +2,7 @@
 	"name": "MyEventTrigger",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
