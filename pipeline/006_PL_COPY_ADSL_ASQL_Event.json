@@ -36,7 +36,20 @@
 										"type": "DelimitedTextReadSettings"
 									}
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "AzureSqlSink",
+									"preCopyScript": "truncate table DimCurrency",
+									"disableMetricsCollection": false
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
 							},
 							"inputs": [
 								{
@@ -45,6 +58,12 @@
 									"parameters": {
 										"FileName": "@pipeline().parameters.SourceFile"
 									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ASQL0319_DimCurrency",
+									"type": "DatasetReference"
 								}
 							]
 						}
