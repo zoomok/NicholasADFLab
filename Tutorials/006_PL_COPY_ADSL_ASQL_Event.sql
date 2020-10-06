@@ -21,3 +21,14 @@
     - Make this trigger a bit smarter to initiate each execution with specific parameters,
         indicating which file has caused this execution, so the pipeline transfers data for the related file only.
 
+5. SQL0319_FactInternetSales.sql
+
+6. Export FactInternetSales csv files
+    - FactInternetSales_2010.csv
+    - FactInternetSales_2011.csv
+    - FactInternetSales_2012.csv
+    - FactInternetSales_2013.csv
+    - FactInternetSales_2014.csv
+
+7. Add/New Triger
+    - Event : blob created (checked)
