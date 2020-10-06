@@ -30,10 +30,6 @@
 		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://KV-ADF-Nicholas.vault.azure.net/"
-		},
-		"MyFileEventTrigger_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318"
 		}
 	},
 	"variables": {
@@ -105,27 +101,6 @@
 				"type": "AzureSqlDW",
 				"typeProperties": {
 					"connectionString": "[parameters('LS_SYNPSE0318_connectionString')]"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MyFileEventTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/salesevent/blobs/",
-					"blobPathEndsWith": ".csv",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('MyFileEventTrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
 				}
 			},
 			"dependsOn": []
@@ -584,6 +559,41 @@
 				"type": "AzureSqlTable",
 				"schema": [],
 				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_Table_Param')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ASQL0319",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/LS_ASQL0319')]"

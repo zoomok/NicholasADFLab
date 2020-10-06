@@ -1077,7 +1077,8 @@
 				],
 				"parameters": {
 					"SourceFile": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "@pipeline().parameters.SourceFile"
 					}
 				},
 				"annotations": []
@@ -1729,7 +1730,15 @@
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipelines": [],
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "006_PL_COPY_ADSL_ASQL_Event",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
 				"type": "BlobEventsTrigger",
 				"typeProperties": {
 					"blobPathBeginsWith": "/salesevent/blobs/",
@@ -1741,7 +1750,9 @@
 					]
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/006_PL_COPY_ADSL_ASQL_Event')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/SCDType1')]",

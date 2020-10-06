@@ -83,9 +83,6 @@
 					},
 					"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
 						"value": "[parameters('LS_KV_BlobStorage0318_properties_typeProperties_baseUrl')]"
-					},
-					"MyFileEventTrigger_properties_typeProperties_scope": {
-						"value": "[parameters('MyFileEventTrigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
@@ -107,6 +104,9 @@
 					},
 					"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('LS_ABLB_KV_properties_typeProperties_connectionString_secretName')]"
+					},
+					"MyFileEventTrigger_properties_typeProperties_scope": {
+						"value": "[parameters('MyFileEventTrigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
