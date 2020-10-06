@@ -130,7 +130,8 @@
 		],
 		"parameters": {
 			"SourceFile": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "@pipeline().parameters.SourceFile"
 			}
 		},
 		"annotations": []
