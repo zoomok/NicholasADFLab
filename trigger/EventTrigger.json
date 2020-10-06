@@ -8,6 +8,10 @@
 				"pipelineReference": {
 					"referenceName": "006_PL_COPY_ADSL_ASQL_Event",
 					"type": "PipelineReference"
+				},
+				"parameters": {
+					"SourcePath": "@triggerBody().filePath",
+					"SourceFile": "@triggerBody().fileName"
 				}
 			}
 		],
