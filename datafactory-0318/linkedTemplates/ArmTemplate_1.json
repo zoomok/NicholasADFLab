@@ -10,20 +10,92 @@
 		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "sec-blobstorage0318-connectionstring"
-		},
-		"MyEventTrigger_properties_006_PL_COPY_ADSL_ASQL_Event_parameters_SourceFile": {
-			"type": "string",
-			"defaultValue": "@triggerBody().fileName"
-		},
-		"MyEventTrigger_properties_typeProperties_scope": {
-			"type": "string",
-			"defaultValue": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_ASQL0319_Table_Param')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ASQL0319",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schema": {
+						"type": "string"
+					},
+					"table": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().table",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SYNPSE_FactTransactionHistoryADF')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_SYNPSE0318",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlDWTable",
+				"schema": [
+					{
+						"name": "TransactionID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ProductKey",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "OrderDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Quantity",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ActualCost",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					}
+				],
+				"typeProperties": {
+					"schema": "prod",
+					"table": "FactTransactionHistoryADF"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/LS_ABLB_KV')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -338,7 +410,9 @@
 				],
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_Table_Param')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/003_PL_DATA_ASQL_Incr_Load')]",
@@ -752,7 +826,9 @@
 				],
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_ASQL0319_Table_Param')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/004_PL_COPY_ADLS_Synapse_DW')]",
@@ -877,7 +953,9 @@
 				],
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SYNPSE_FactTransactionHistoryADF')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/006_PL_COPY_ADSL_ASQL_Event')]",
@@ -886,57 +964,131 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy CSV files to SQL0319 by Event",
-						"type": "Copy",
+						"name": "If Condition1",
+						"type": "IfCondition",
 						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
+							"expression": {
+								"value": "@bool(startswith(pipeline().parameters.SourceFile,'FactInternetSales'))",
+								"type": "Expression"
 							},
-							"sink": {
-								"type": "AzureSqlSink"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
+							"ifFalseActivities": [
+								{
+									"name": "Copy data2",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": "truncate table DimCurrency",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "DS_ADLS_Param_Event",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": "@pipeline().parameters.SourceFile"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DS_ASQL0319_DimCurrency",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
 								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DS_ADLS_CSV_Event",
-								"type": "DatasetReference",
-								"parameters": {
-									"FileName": "@pipeline().parameters.SourceFile"
+							],
+							"ifTrueActivities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true,
+												"wildcardFileName": "'*.csv'"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"preCopyScript": "truncate table FactInternetSales",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "DS_ADLS_Param_Event",
+											"type": "DatasetReference",
+											"parameters": {
+												"FileName": "@pipeline().parameters.SourceFile"
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DS_ASQL0319_InternetSales",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									]
 								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DS_ASQL0319_FactInternetSales",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+							]
+						}
 					}
 				],
 				"parameters": {
@@ -1046,38 +1198,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/SCDType1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MyEventTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "006_PL_COPY_ADSL_ASQL_Event",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"SourceFile": "[parameters('MyEventTrigger_properties_006_PL_COPY_ADSL_ASQL_Event_parameters_SourceFile')]"
-						}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/salesevent/blobs/.csv",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('MyEventTrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/006_PL_COPY_ADSL_ASQL_Event')]"
 			]
 		}
 	]
