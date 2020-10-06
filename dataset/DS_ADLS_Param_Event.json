@@ -1,8 +1,8 @@
 {
-	"name": "DS_ABLB_BLOB_CSV_Event",
+	"name": "DS_ADLS_Param_Event",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LS_ABLB_KV",
+			"referenceName": "LS_ADLS",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -15,12 +15,9 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"fileName": {
-					"value": "@dataset().FileName",
-					"type": "Expression"
-				},
-				"container": "csv-event"
+				"type": "AzureBlobFSLocation",
+				"fileName": "@dataset.FileName",
+				"fileSystem": "salesevent"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
