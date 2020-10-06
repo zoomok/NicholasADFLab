@@ -1,0 +1,12 @@
+{
+	"name": "DS_ASQL0319_InternetSales",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ASQL0319",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
