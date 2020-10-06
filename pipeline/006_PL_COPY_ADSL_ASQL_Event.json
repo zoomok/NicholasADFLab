@@ -1,0 +1,11 @@
+{
+	"name": "006_PL_COPY_ADSL_ASQL_Event",
+	"properties": {
+		"parameters": {
+			"SourceFile": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
