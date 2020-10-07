@@ -1,5 +1,5 @@
 {
-	"name": "008_PL_COM_Save_Metadata",
+	"name": "008_PL_COPY_ADSL_Check_Metadata",
 	"properties": {
 		"description": "Azure Data Factory Get Metadata and Save it to DB table\n\nLink : https://www.mssqltips.com/sqlservertip/6246/azure-data-factory-get-metadata-example/",
 		"activities": [
