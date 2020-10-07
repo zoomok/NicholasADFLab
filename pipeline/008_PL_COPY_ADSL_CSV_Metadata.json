@@ -48,7 +48,18 @@
 					"items": {
 						"value": "@activity('Get_Folder_MetaData').output.childItems",
 						"type": "Expression"
-					}
+					},
+					"activities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
 				}
 			}
 		],
