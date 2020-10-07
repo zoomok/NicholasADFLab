@@ -13,4 +13,4 @@
     - DB : SQL0319
     - Table : FactInternetSales
 
-4. Create a pipeline : 008_PL_COM_Save_Metadata
+4. Create a pipeline : 008_PL_COPY_ADSL_CSV_Metadata
