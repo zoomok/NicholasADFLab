@@ -99,6 +99,20 @@
 				}
 			}
 		],
+		"parameters": {
+			"EmailTo": {
+				"type": "string",
+				"defaultValue": "No email set!"
+			},
+			"Subject": {
+				"type": "string",
+				"defaultValue": "No subject set!"
+			},
+			"ErrorMessage": {
+				"type": "string",
+				"defaultValue": "No message set!"
+			}
+		},
 		"annotations": []
 	}
 }
