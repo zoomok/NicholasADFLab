@@ -1,5 +1,5 @@
 {
-	"name": "009_PL_COM_Email_Notification_Simple",
+	"name": "009_PL_COM_Email_Notice_Simple",
 	"properties": {
 		"description": "Send Notifications from an Azure Data Factory Pipeline using Logic App\n\nTest with 006_PL_DATA_StoredProcedure\n\nLink : https://www.mssqltips.com/sqlservertip/5718/azure-data-factory-pipeline-email-notification--part-1/\n\nhttps://www.mssqltips.com/sqlservertip/5962/send-notifications-from-an-azure-data-factory-pipeline--part-2/",
 		"activities": [
