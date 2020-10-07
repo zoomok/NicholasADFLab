@@ -7,4 +7,27 @@
 
 2. Pipeline name : 006_PL_DATA_StoredProcedure
 
-3. 
+3. Create stored procedure :
+-- SQL0319
+CREATE TABLE [dbo].[ExceptionLogs](
+ [PipelineName] [varchar](100) NULL,
+
+ [RunId] [varchar](100) NULL,
+ [TableName] [varchar](100) NULL
+)
+GO
+
+CREATE PROCEDURE Usp_ExceptionLog
+(@PipelineName varchar(100), @runid varchar(100),@TableName varchar(100)) 
+AS
+BEGIN
+    INSERT INTO ExceptionLogs VALUES(@PipelineName,@runid,@TableName) 
+END
+GO
+
+4. Develop Pipeline and debug
+
+5. Check table
+select	*
+from	exceptionlogs
+;
