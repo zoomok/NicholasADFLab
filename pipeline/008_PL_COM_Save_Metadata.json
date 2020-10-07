@@ -4,7 +4,7 @@
 		"description": "Azure Data Factory Get Metadata and Save it to DB table\n\nLink : https://www.mssqltips.com/sqlservertip/6246/azure-data-factory-get-metadata-example/",
 		"activities": [
 			{
-				"name": "Get Folder Meta Data",
+				"name": "Get_Folder_Meta_Data",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -36,13 +36,19 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Folder Meta Data",
+						"activity": "Get_Folder_Meta_Data",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get_Folder_Meta_Data').output.childItems",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"annotations": []
