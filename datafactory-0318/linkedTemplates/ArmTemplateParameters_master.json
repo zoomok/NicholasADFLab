@@ -8,6 +8,9 @@
 		"LS_ADLS_accountKey": {
 			"value": ""
 		},
+		"LS_ASQL_connectionString": {
+			"value": ""
+		},
 		"LS_ASQL0318_connectionString": {
 			"value": ""
 		},
@@ -17,17 +20,14 @@
 		"LS_SYNPSE0318_connectionString": {
 			"value": ""
 		},
-		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
-			"value": "sec-blobstorage0318-connectionstring"
-		},
 		"LS_ADLS_properties_typeProperties_url": {
 			"value": "https://datalake0318.dfs.core.windows.net"
 		},
 		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
 			"value": "https://KV-ADF-Nicholas.vault.azure.net/"
 		},
-		"MyFileEventTrigger_properties_typeProperties_scope": {
-			"value": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318"
+		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
+			"value": "sec-blobstorage0318-connectionstring"
 		},
 		"containerUri": {
 			"value": ""

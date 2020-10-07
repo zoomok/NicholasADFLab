@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_ADLS'"
 		},
+		"LS_ASQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_ASQL'"
+		},
 		"LS_ASQL0318_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0318'"
@@ -23,10 +27,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_SYNPSE0318'"
 		},
-		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "sec-blobstorage0318-connectionstring"
-		},
 		"LS_ADLS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://datalake0318.dfs.core.windows.net"
@@ -35,9 +35,9 @@
 			"type": "string",
 			"defaultValue": "https://KV-ADF-Nicholas.vault.azure.net/"
 		},
-		"MyFileEventTrigger_properties_typeProperties_scope": {
+		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "/subscriptions/3688f460-76ee-4b63-b2eb-fb1edd332e61/resourceGroups/RG_ASA/providers/Microsoft.Storage/storageAccounts/datalake0318"
+			"defaultValue": "sec-blobstorage0318-connectionstring"
 		},
 		"containerUri": {
 			"type": "string",
@@ -68,6 +68,9 @@
 					},
 					"LS_ADLS_accountKey": {
 						"value": "[parameters('LS_ADLS_accountKey')]"
+					},
+					"LS_ASQL_connectionString": {
+						"value": "[parameters('LS_ASQL_connectionString')]"
 					},
 					"LS_ASQL0318_connectionString": {
 						"value": "[parameters('LS_ASQL0318_connectionString')]"
@@ -104,9 +107,6 @@
 					},
 					"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('LS_ABLB_KV_properties_typeProperties_connectionString_secretName')]"
-					},
-					"MyFileEventTrigger_properties_typeProperties_scope": {
-						"value": "[parameters('MyFileEventTrigger_properties_typeProperties_scope')]"
 					}
 				}
 			},
