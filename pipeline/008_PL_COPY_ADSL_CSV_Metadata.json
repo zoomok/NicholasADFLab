@@ -64,10 +64,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "DS_ADLS_Param_Event",
+									"referenceName": "DS_ADLS_CSV_SalesEvent_Param",
 									"type": "DatasetReference",
 									"parameters": {
-										"FileName": "@item().name"
+										"FileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
 									}
 								},
 								"fieldList": [
