@@ -32,7 +32,7 @@
 				}
 			},
 			{
-				"name": "ForEach Save meta info to Table",
+				"name": "ForEach_Check_MetaData",
 				"type": "ForEach",
 				"dependsOn": [
 					{
