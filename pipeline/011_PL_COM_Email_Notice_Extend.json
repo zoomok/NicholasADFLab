@@ -3,9 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup_Get_TableList",
-				"description": "Get TableList from SQL0318.dbo.VW_TableList_P",
-				"type": "Lookup",
+				"name": "Stored procedure for logging",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
@@ -16,64 +15,27 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
-					},
-					"dataset": {
-						"referenceName": "DS_ASQL0318_VW_TableList_P",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "Filter_Table_Startwith_P",
-				"description": "Filter tables which name starts with 'P'",
-				"type": "Filter",
-				"dependsOn": [
-					{
-						"activity": "Lookup_Get_TableList",
-						"dependencyConditions": [
-							"Succeeded"
-						]
+					"storedProcedureName": "[dbo].[Usp_ExceptionLog]",
+					"storedProcedureParameters": {
+						"PipelineName": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"runid": {
+							"value": {
+								"value": "@pipeline().RunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TableName": {
+							"value": "DemoTable",
+							"type": "String"
+						}
 					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Lookup_Get_TableList').output.value",
-						"type": "Expression"
-					},
-					"condition": {
-						"value": "@startswith(string(item().tbl), 'P')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "sp_Usp_PurgeTargetTables",
-				"description": "Purge Tables",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [
-					{
-						"activity": "Filter_Table_Startwith_P",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[dbo].[Usp_PurgeTargetTables]"
 				},
 				"linkedServiceName": {
 					"referenceName": "LS_ASQL0319",
@@ -81,213 +43,11 @@
 				}
 			},
 			{
-				"name": "ForEach_CopyData",
-				"description": "Copy filtered table data from 0318 to 0319",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "sp_Usp_PurgeTargetTables",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Filter_Table_Startwith_P').output.value",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Copy data from 0318 to 0319",
-							"description": "Copy Table data using parameters",
-							"type": "Copy",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "AzureSqlSink"
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "DS_ASQL0318_Table_Param",
-									"type": "DatasetReference",
-									"parameters": {
-										"SchemaName": {
-											"value": "@item().sch",
-											"type": "Expression"
-										},
-										"TableName": "@item().tbl"
-									}
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "DS_ASQL0319_Table_Param",
-									"type": "DatasetReference",
-									"parameters": {
-										"schema": "@item().sch",
-										"table": "@item().tbl"
-									}
-								}
-							]
-						}
-					]
-				}
-			},
-			{
-				"name": "Send Error Lookup TableList",
+				"name": "Send Success Email",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "Lookup_Get_TableList",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "010_PL_COM_Email_Notice_Unit",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"EmailTo": "zoomok@gmail.com",
-						"Subject": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						},
-						"ErrorMessage": {
-							"value": "@{activity('Lookup_Get_TableList').Error.Message}",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			{
-				"name": "Send Error Filter Table",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "Filter_Table_Startwith_P",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "010_PL_COM_Email_Notice_Unit",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"EmailTo": "zoomok@gmail.com",
-						"Subject": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						},
-						"ErrorMessage": {
-							"value": "@{activity('Filter_Table_Startwith_P').Error.Message}",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			{
-				"name": "Send Error Purge StoredProcedure",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "sp_Usp_PurgeTargetTables",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "010_PL_COM_Email_Notice_Unit",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"EmailTo": "zoomok@gmail.com",
-						"Subject": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						},
-						"ErrorMessage": {
-							"value": "@{activity('sp_Usp_PurgeTargetTables').Error.Message}",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			{
-				"name": "Send Error on ForEach_CopyData",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach_CopyData",
-						"dependencyConditions": [
-							"Failed"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "010_PL_COM_Email_Notice_Unit",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"EmailTo": "zoomok@gmail.com",
-						"Subject": {
-							"value": "@pipeline().Pipeline",
-							"type": "Expression"
-						},
-						"ErrorMessage": {
-							"value": "@{activity('Copy data from 0318 to 0319').Error.Message}",
-							"type": "Expression"
-						}
-					}
-				}
-			},
-			{
-				"name": "Send Succcess",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach_CopyData",
+						"activity": "Stored procedure for logging",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -306,7 +66,35 @@
 							"value": "@pipeline().Pipeline",
 							"type": "Expression"
 						},
-						"ErrorMessage": "Finished Successfully"
+						"ErrorMessage": "Successfully Finished"
+					}
+				}
+			},
+			{
+				"name": "Send Failure Email",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure for logging",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": "@{activity('Stored procedure for logging').Error.Message}"
 					}
 				}
 			}
