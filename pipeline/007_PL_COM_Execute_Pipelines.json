@@ -1,6 +1,24 @@
 {
 	"name": "007_PL_COM_Execute_Pipelines",
 	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "006_PL_DATA_StoredProcedure_Param",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"PL_TableName": "Value from Parent"
+					}
+				}
+			}
+		],
 		"annotations": []
 	}
 }
