@@ -13,4 +13,17 @@
     - DB : SQL0319
     - Table : FactInternetSales
 
-4. Create a pipeline : 008_PL_COPY_ADSL_CSV_Metadata
+4. Create a pipeline : 008_PL_COPY_ADLS_CSV_Metadata
+
+5. Dataset
+    - DS_ADLS_CSV_Sales
+    - DS_ADLS_CSV_SalesEvent_Param
+    - DS_ASQL0319_InternetSales
+
+6. Run or Debug pipeline
+
+7. Check table
+-- SQL0319
+select	*
+from	FactInternetSales
+;
