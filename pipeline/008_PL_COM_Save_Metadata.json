@@ -51,7 +51,7 @@
 					"activities": [
 						{
 							"name": "Get_File_Metadata",
-							"type": "Copy",
+							"type": "GetMetadata",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -62,7 +62,20 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
+								"dataset": {
+									"referenceName": "DS_ADLS_Param_Event",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": "@pipeline().parameters.SourceFile"
+									}
+								},
+								"fieldList": [],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
 							}
 						}
 					]

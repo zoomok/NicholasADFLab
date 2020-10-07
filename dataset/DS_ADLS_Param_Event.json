@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"FileName": {
-				"type": "string",
-				"defaultValue": "@pipeline().parameters.SourceFile"
+				"type": "string"
 			}
 		},
 		"annotations": [],
@@ -16,7 +15,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "@dataset.FileName",
+				"fileName": {
+					"value": "@dataset.FileName",
+					"type": "Expression"
+				},
 				"fileSystem": "salesevent"
 			},
 			"columnDelimiter": ",",
