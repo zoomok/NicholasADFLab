@@ -66,15 +66,41 @@
 									"referenceName": "DS_ADLS_Param_Event",
 									"type": "DatasetReference",
 									"parameters": {
-										"FileName": "@pipeline().parameters.SourceFile"
+										"FileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
 									}
 								},
-								"fieldList": [],
+								"fieldList": [
+									"lastModified",
+									"itemName"
+								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings"
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "CheckDate",
+							"description": "check whether or not the Last modified field obtained from the previous activity falls within last 7 days period",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get_File_Metadata",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greaterOrEquals(activity('Get_File_Metadata').output.lastModified,adddays(utcnow(),-7))",
+									"type": "Expression"
 								}
 							}
 						}
