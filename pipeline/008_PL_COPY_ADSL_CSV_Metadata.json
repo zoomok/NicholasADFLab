@@ -33,6 +33,7 @@
 			},
 			{
 				"name": "ForEach_Check_MetaData",
+				"description": "",
 				"type": "ForEach",
 				"dependsOn": [
 					{
