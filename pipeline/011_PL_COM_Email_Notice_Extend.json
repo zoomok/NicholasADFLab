@@ -157,6 +157,158 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Send Error Lookup TableList",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Get_TableList",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": {
+							"value": "@{activity('Lookup_Get_TableList').Error.Message}",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Send Error Filter Table",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Filter_Table_Startwith_P",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": {
+							"value": "@{activity('Filter_Table_Startwith_P').Error.Message}",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Send Error Purge StoredProcedure",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "sp_Usp_PurgeTargetTables",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": {
+							"value": "@{activity('sp_Usp_PurgeTargetTables').Error.Message}",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Send Error on ForEach_CopyData",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEach_CopyData",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": {
+							"value": "@{activity('Copy data from 0318 to 0319').Error.Message}",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "Send Succcess",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEach_CopyData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": "Finished Successfully"
+					}
+				}
 			}
 		],
 		"annotations": []
