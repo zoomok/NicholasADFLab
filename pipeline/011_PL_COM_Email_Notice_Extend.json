@@ -1,6 +1,164 @@
 {
 	"name": "011_PL_COM_Email_Notice_Extend",
 	"properties": {
+		"activities": [
+			{
+				"name": "Lookup_Get_TableList",
+				"description": "Get TableList from SQL0318.dbo.VW_TableList_P",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_ASQL0318_VW_TableList_P",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Filter_Table_Startwith_P",
+				"description": "Filter tables which name starts with 'P'",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Lookup_Get_TableList",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup_Get_TableList').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(string(item().tbl), 'P')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "sp_Usp_PurgeTargetTables",
+				"description": "Purge Filtered Tables",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Filter_Table_Startwith_P",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Usp_PurgeTargetTables]"
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_ASQL0319",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "ForEach_CopyData",
+				"description": "Copy filtered table data from 0318 to 0319",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "sp_Usp_PurgeTargetTables",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter_Table_Startwith_P').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Copy data from 0318 to 0319",
+							"description": "Copy Table data using parameters",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "AzureSqlSink"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "DS_ASQL0318_Table_Param",
+									"type": "DatasetReference",
+									"parameters": {
+										"SchemaName": {
+											"value": "@item().sch",
+											"type": "Expression"
+										},
+										"TableName": "@item().tbl"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ASQL0319_Table_Param",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": "@item().sch",
+										"table": "@item().tbl"
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
 		"annotations": []
 	}
 }
