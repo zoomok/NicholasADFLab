@@ -1,5 +1,5 @@
 {
-	"name": "DS_ADLS_Param_Event",
+	"name": "DS_ADLS_CSV_SalesEvent_Param",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_ADLS",
@@ -16,14 +16,14 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset.FileName",
+					"value": "@dataset().FileName",
 					"type": "Expression"
 				},
 				"fileSystem": "salesevent"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
-			"firstRowAsHeader": false,
+			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
 		"schema": []

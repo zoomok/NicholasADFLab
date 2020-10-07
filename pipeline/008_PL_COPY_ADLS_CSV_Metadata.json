@@ -1,5 +1,5 @@
 {
-	"name": "008_PL_COPY_ADSL_CSV_Metadata",
+	"name": "008_PL_COPY_ADLS_CSV_Metadata",
 	"properties": {
 		"description": "Azure Data Factory Get Metadata and Save CSV to DB table\n\nLink : https://www.mssqltips.com/sqlservertip/6246/azure-data-factory-get-metadata-example/",
 		"activities": [
@@ -24,7 +24,8 @@
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings"
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
 					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings"
@@ -32,8 +33,7 @@
 				}
 			},
 			{
-				"name": "ForEach_Check_MetaData",
-				"description": "",
+				"name": "ForEach_AC",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -51,7 +51,7 @@
 					},
 					"activities": [
 						{
-							"name": "Get_File_Metadata",
+							"name": "Get_File_Metadata_AC",
 							"type": "GetMetadata",
 							"dependsOn": [],
 							"policy": {
@@ -64,7 +64,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "DS_ADLS_Param_Event",
+									"referenceName": "DS_ADLS_CSV_SalesEvent_Param",
 									"type": "DatasetReference",
 									"parameters": {
 										"FileName": {
@@ -86,12 +86,12 @@
 							}
 						},
 						{
-							"name": "CheckDate",
-							"description": "check whether or not the Last modified field obtained from the previous activity falls within last 7 days period",
+							"name": "CheckDate_AC",
+							"description": "This expression will check whether or not the Last modified field obtained from the previous activity falls within last 1 day period",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
-									"activity": "Get_File_Metadata",
+									"activity": "Get_File_Metadata_AC",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -100,12 +100,12 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greaterOrEquals(activity('Get_File_Metadata').output.lastModified,adddays(utcnow(),-7))",
+									"value": "@greaterOrEquals(activity('Get_File_Metadata_AC').output.lastModified,adddays(utcnow(),-1))",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
 									{
-										"name": "Copy_data",
+										"name": "Copy_Data_AC",
 										"type": "Copy",
 										"dependsOn": [],
 										"policy": {
@@ -129,7 +129,7 @@
 											},
 											"sink": {
 												"type": "AzureSqlSink",
-												"preCopyScript": "delete from FactinternetSales",
+												"preCopyScript": "delete from FactInternetSales",
 												"disableMetricsCollection": false
 											},
 											"enableStaging": false,
@@ -144,11 +144,11 @@
 										},
 										"inputs": [
 											{
-												"referenceName": "DS_ADLS_Param_Event",
+												"referenceName": "DS_ADLS_CSV_SalesEvent_Param",
 												"type": "DatasetReference",
 												"parameters": {
 													"FileName": {
-														"value": "@activity('Get_File_Metadata').output.itemName",
+														"value": "@activity('Get_File_Metadata_AC').output.itemName",
 														"type": "Expression"
 													}
 												}
