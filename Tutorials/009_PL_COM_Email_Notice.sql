@@ -39,11 +39,11 @@
 			- Request 	: Test
 			- Post		: See trigger history in adf-notification
 				https://prod-30.eastus.logic.azure.com:443/workflows/9b66a7ff65d4454d881b66c24ed7c3dc/triggers/manual/paths/
-				invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pSpKw9-Oq3YjpIneFlVM3loakFNxtSsKPZDQxnn5YEI
+				invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pSpKw9-Oq3YjpIneFlVM3lo .....
 			- Post data	:
 				{
 						"DataFactoryName": "test",
-						"EmailTo": "zoomok@gmail.com",
+						"EmailTo": "xxx@gmail.com",
 						"ErrorMessage": "This is a test!",
 						"PipelineName": "Test",
 						"Subject": "Hello world"
@@ -65,7 +65,7 @@
 			   "PipelineName": "@{pipeline().Pipeline}",
 			   "Subject": "Pipeline finished!",
 			   "ErrorMessage": "Everything is okey-dokey!",
-			   "EmailTo": "zoomok@gmail.com"
+			   "EmailTo": "xxx@gmail.com"
 			}
 		- Failure :
 			- Method 	: Post
@@ -75,7 +75,7 @@
 				   "PipelineName": "@{pipeline().Pipeline}",
 				   "Subject": "An error has occurred!",
 				   "ErrorMessage": "The ADF pipeline has crashed! Please check the logs.",
-				   "EmailTo": "zoomok@gmail.com"
+				   "EmailTo": "xxx@gmail.com"
 				}
 	
 3. Run pipeline and check email
