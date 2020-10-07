@@ -24,7 +24,8 @@
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings"
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
 					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings"
@@ -78,90 +79,12 @@
 									"itemName"
 								],
 								"storeSettings": {
-									"type": "AzureBlobFSReadSettings"
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
-							}
-						},
-						{
-							"name": "CheckDate",
-							"description": "check whether or not the Last modified field obtained from the previous activity falls within last 7 days period",
-							"type": "IfCondition",
-							"dependsOn": [
-								{
-									"activity": "Get_File_Metadata",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"userProperties": [],
-							"typeProperties": {
-								"expression": {
-									"value": "@greaterOrEquals(activity('Get_File_Metadata').output.lastModified,adddays(utcnow(),-7))",
-									"type": "Expression"
-								},
-								"ifTrueActivities": [
-									{
-										"name": "Copy_data",
-										"type": "Copy",
-										"dependsOn": [],
-										"policy": {
-											"timeout": "7.00:00:00",
-											"retry": 0,
-											"retryIntervalInSeconds": 30,
-											"secureOutput": false,
-											"secureInput": false
-										},
-										"userProperties": [],
-										"typeProperties": {
-											"source": {
-												"type": "DelimitedTextSource",
-												"storeSettings": {
-													"type": "AzureBlobFSReadSettings",
-													"recursive": true
-												},
-												"formatSettings": {
-													"type": "DelimitedTextReadSettings"
-												}
-											},
-											"sink": {
-												"type": "AzureSqlSink",
-												"preCopyScript": "delete from FactinternetSales",
-												"disableMetricsCollection": false
-											},
-											"enableStaging": false,
-											"translator": {
-												"type": "TabularTranslator",
-												"typeConversion": true,
-												"typeConversionSettings": {
-													"allowDataTruncation": true,
-													"treatBooleanAsNumber": false
-												}
-											}
-										},
-										"inputs": [
-											{
-												"referenceName": "DS_ADLS_Param_Event",
-												"type": "DatasetReference",
-												"parameters": {
-													"FileName": {
-														"value": "@activity('Get_File_Metadata').output.itemName",
-														"type": "Expression"
-													}
-												}
-											}
-										],
-										"outputs": [
-											{
-												"referenceName": "DS_ASQL0319_InternetSales",
-												"type": "DatasetReference"
-											}
-										]
-									}
-								]
 							}
 						}
 					]
