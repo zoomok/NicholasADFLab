@@ -32,7 +32,10 @@
 							"type": "String"
 						},
 						"TableName": {
-							"value": "DemoTable",
+							"value": {
+								"value": "@pipeline().parameters.PL_TableName",
+								"type": "Expression"
+							},
 							"type": "String"
 						}
 					}
