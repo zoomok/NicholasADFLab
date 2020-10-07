@@ -54,7 +54,7 @@
 			},
 			{
 				"name": "sp_Usp_PurgeTargetTables",
-				"description": "Purge Filtered Tables",
+				"description": "Purge Tables",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
