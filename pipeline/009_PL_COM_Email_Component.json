@@ -1,0 +1,29 @@
+{
+	"name": "009_PL_COM_Email_Component",
+	"properties": {
+		"activities": [
+			{
+				"name": "Send Email",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://prod-30.eastus.logic.azure.com:443/workflows/9b66a7ff65d4454d881b66c24ed7c3dc/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=pSpKw9-Oq3YjpIneFlVM3loakFNxtSsKPZDQxnn5YEI",
+					"method": "POST",
+					"body": {
+						"value": "{\n   \"DataFactoryName\": \"@{pipeline().DataFactory}\",\n   \"PipelineName\": \"@{pipeline().Pipeline}\",\n   \"Subject\": \"Pipeline finished!\",\n   \"ErrorMessage\": \"Everything is okey-dokey!\",\n   \"EmailTo\": \"zoomok@gmail.com\"\n}",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"annotations": []
+	}
+}
