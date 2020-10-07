@@ -1,5 +1,5 @@
 {
-	"name": "008_PL_COPY_ADSL_CSV_Metadata",
+	"name": "008_PL_COPY_ADLS_CSV_Metadata",
 	"properties": {
 		"description": "Azure Data Factory Get Metadata and Save CSV to DB table\n\nLink : https://www.mssqltips.com/sqlservertip/6246/azure-data-factory-get-metadata-example/",
 		"activities": [
