@@ -20,7 +20,9 @@
 						"referenceName": "DS_ADLS_CSV_Sales",
 						"type": "DatasetReference"
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings"
 					},
@@ -28,6 +30,19 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "ForEach Save meta info to Table",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Folder Meta Data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": []
 			}
 		],
 		"annotations": []
