@@ -31,6 +31,25 @@
 						"type": "DelimitedTextReadSettings"
 					}
 				}
+			},
+			{
+				"name": "ForEach_AC",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get_Folder_MetaData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get_Folder_MetaData').output.childItems",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"annotations": []
