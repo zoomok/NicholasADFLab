@@ -87,6 +87,7 @@
 						},
 						{
 							"name": "CheckDate_AC",
+							"description": "This expression will check whether or not the Last modified field obtained from the previous activity falls within last 1 day period",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
@@ -99,7 +100,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greaterOrEquals(activity('Get_File_Metadata_AC').output.lastModified,adddays(utcnow(),-7))",
+									"value": "@greaterOrEquals(activity('Get_File_Metadata_AC').output.lastModified,adddays(utcnow(),-1))",
 									"type": "Expression"
 								},
 								"ifTrueActivities": [
