@@ -29,7 +29,7 @@ GO
 
 5. Develop Pipeline and debug
 
-5. Check table
+6. Check table
 select	*
 from	exceptionlogs
 ;
