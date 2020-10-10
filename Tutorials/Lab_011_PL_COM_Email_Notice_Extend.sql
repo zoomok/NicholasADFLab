@@ -16,3 +16,5 @@
 				ErrorMessage : @{activity('Stored procedure for logging').Error.Message}
 
 2. Run pipeline and check email
+
+--(End)----------------------------------------------------------------------------------------------------------------------
