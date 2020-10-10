@@ -133,3 +133,5 @@
 						- sink dataset		: DS_ASQL_Movies_Dynamic
 						- TableName			: @{item().SQLTable}
 						- Pre-copy			: truncate table dbo.@{item().SQLTable}
+						
+--(End)----------------------------------------------------------------------------------------------------------------------
