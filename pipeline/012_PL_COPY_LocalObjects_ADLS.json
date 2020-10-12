@@ -103,7 +103,8 @@
 					"dataset": {
 						"referenceName": "DS_ASQL_Pipeline_Param",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
