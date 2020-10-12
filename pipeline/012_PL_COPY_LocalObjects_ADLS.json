@@ -126,8 +126,8 @@
 					},
 					"activities": [
 						{
-							"name": "Copy-Table",
-							"type": "Copy",
+							"name": "Lookup1",
+							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -139,41 +139,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "SqlServerSource",
-									"sqlReaderQuery": {
-										"value": "use @{item().Table_Catalog} select * from @{item().Table_Name}",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"sink": {
-									"type": "ParquetSink",
+									"type": "ParquetSource",
 									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "ParquetWriteSettings"
+										"type": "AzureBlobFSReadSettings",
+										"recursive": false
 									}
 								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "DS_SQL_Desktop",
-									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
+								"dataset": {
 									"referenceName": "DS_ADLS_Parquet",
 									"type": "DatasetReference",
 									"parameters": {
@@ -186,8 +158,9 @@
 											"type": "Expression"
 										}
 									}
-								}
-							]
+								},
+								"firstRowOnly": false
+							}
 						}
 					]
 				}
