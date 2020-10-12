@@ -22,7 +22,9 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "AzureSqlSink"
+						"type": "AzureSqlSink",
+						"preCopyScript": "truncate table pipeline_parameter",
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
