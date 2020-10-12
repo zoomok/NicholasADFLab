@@ -148,12 +148,14 @@
 									"partitionOption": "None"
 								},
 								"sink": {
-									"type": "ParquetSink",
+									"type": "DelimitedTextSink",
 									"storeSettings": {
 										"type": "AzureBlobFSWriteSettings"
 									},
 									"formatSettings": {
-										"type": "ParquetWriteSettings"
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".txt"
 									}
 								},
 								"enableStaging": false,
@@ -174,7 +176,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "DS_ADLS_Parquet",
+									"referenceName": "DS_ADLS_AdventureWorks_CSV",
 									"type": "DatasetReference",
 									"parameters": {
 										"table_name": "@{item().Table_Name}",
