@@ -18,8 +18,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@{item().Table_Name}/@{formatDateTime(utcnow(),'yyyy')}/@{formatDateTime(utcnow(),'MM')}/@{formatDateTime(utcnow(),'dd')}/@{item().Table_Name}@{formatDateTime(utcnow(),'HH')}",
+					"type": "Expression"
+				},
 				"folderPath": {
-					"value": "@concat('lake/raw/on_prem2/',dataset().table_catalog_name)\n@{item().Table_Name}/@{formatDateTime(utcnow(),'yyyy')}/@{formatDateTime(utcnow(),'MM')}/@{formatDateTime(utcnow(),'dd')}/@{item().Table_Name}@{formatDateTime(utcnow(),'HH')}",
+					"value": "@concat('lake/raw/on_prem2/', dataset().table_catalog_name)",
 					"type": "Expression"
 				}
 			},
