@@ -1,5 +1,5 @@
 --===========================================================================================================================
--- Lab 12 : Azure Data Factory Pipeline to fully Load all SQL Server Objects to ADLS Gen2
+-- Lab 12 : Azure Data Factory Pipeline to fully Load all SQL Server Objects to ADLS Gen2 as CSV files
 --===========================================================================================================================
 1. Link :
 	https://www.mssqltips.com/sqlservertip/6302/azure-data-factory-pipeline-to-fully-load-all-sql-server-objects-to-adls-gen2/
