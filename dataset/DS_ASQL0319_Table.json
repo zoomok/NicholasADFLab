@@ -11,7 +11,7 @@
 		"schema": [],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "dbo.dummyName"
+			"table": "dummyName"
 		}
 	}
 }
