@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select\tquotename(table_schema) + '.' +\n\t\tquotename(table_name) as Table_Name,\n\t\tTable_catalog\nfrom\tinformation_schema.tables\nwhere   table_type = 'BASE TABLE'\nand   table_name like 'Pr%'",
+						"sqlReaderQuery": "select\tquotename(table_schema) + '.' +\n\t\tquotename(table_name) as Table_Name,\n\t\tTable_catalog\nfrom\tinformation_schema.tables\nwhere   table_type = 'BASE TABLE'\nand table_name like 'ProductInventory%'",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
