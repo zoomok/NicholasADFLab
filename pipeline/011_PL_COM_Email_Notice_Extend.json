@@ -1,0 +1,118 @@
+{
+	"name": "011_PL_COM_Email_Notice_Extend",
+	"properties": {
+		"activities": [
+			{
+				"name": "Stored procedure for logging",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[Usp_ExceptionLog]",
+					"storedProcedureParameters": {
+						"PipelineName": {
+							"value": {
+								"value": "@pipeline().Pipeline",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"runid": {
+							"value": {
+								"value": "@pipeline().RunId",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"TableName": {
+							"value": "DemoTable",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_ASQL0319",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Send Success Email",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure for logging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": "Successfully Finished"
+					}
+				}
+			},
+			{
+				"name": "Send Failure Email",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure for logging",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "010_PL_COM_Email_Notice_Unit",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"EmailTo": "zoomok@gmail.com",
+						"Subject": {
+							"value": "@pipeline().Pipeline",
+							"type": "Expression"
+						},
+						"ErrorMessage": "@{activity('Stored procedure for logging').Error.Message}"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"EmailTo": {
+				"type": "string",
+				"defaultValue": "No email set!"
+			},
+			"Subject": {
+				"type": "string",
+				"defaultValue": "No subject set!"
+			},
+			"ErrorMessage": {
+				"type": "string",
+				"defaultValue": "No message set!"
+			}
+		},
+		"annotations": []
+	}
+}

@@ -1,0 +1,17 @@
+{
+	"name": "LS_SQL_Local_Desktop",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=DESKTOP-E7F3VBA\\SQLEXPRESS;initial catalog=AdventureWorks2012",
+			"userName": "administrator",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI5YzUxZWQ0My1iZTQ0LTQ1OTAtOWM0Mi0yZDEyMWQxNjY3NGEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "IR-Local-Desktop",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
