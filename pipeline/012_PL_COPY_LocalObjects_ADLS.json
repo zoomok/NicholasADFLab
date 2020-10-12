@@ -139,25 +139,13 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "ParquetSource",
-									"storeSettings": {
-										"type": "AzureBlobFSReadSettings",
-										"recursive": false
-									}
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
 								},
 								"dataset": {
-									"referenceName": "DS_ADLS_Parquet",
-									"type": "DatasetReference",
-									"parameters": {
-										"table_name": {
-											"value": "@{item().Table_Name}",
-											"type": "Expression"
-										},
-										"table_catalog_name": {
-											"value": "@{item().Table_Catalog}",
-											"type": "Expression"
-										}
-									}
+									"referenceName": "DS_SQL_Desktop",
+									"type": "DatasetReference"
 								},
 								"firstRowOnly": false
 							}
