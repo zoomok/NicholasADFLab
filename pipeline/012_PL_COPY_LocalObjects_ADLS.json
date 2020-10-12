@@ -126,8 +126,8 @@
 					},
 					"activities": [
 						{
-							"name": "Lookup1",
-							"type": "Lookup",
+							"name": "Copy-Table",
+							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -140,16 +140,48 @@
 							"typeProperties": {
 								"source": {
 									"type": "SqlServerSource",
-									"sqlReaderQuery": "select AddressID from person.address where AddressID <= 10",
+									"sqlReaderQuery": {
+										"value": "USE @{item().Table_Catalog} SELECT * FROM @{item().Table_Name}",
+										"type": "Expression"
+									},
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"dataset": {
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
 									"referenceName": "DS_SQL_Desktop",
 									"type": "DatasetReference"
-								},
-								"firstRowOnly": false
-							}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_ADLS_Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"table_name": "@{item().Table_Name}",
+										"table_catalog_name": "@{item().Table_Catalog}"
+									}
+								}
+							]
 						}
 					]
 				}
