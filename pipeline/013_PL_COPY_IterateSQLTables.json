@@ -14,7 +14,7 @@
 					},
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "CopyDataToDW",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
