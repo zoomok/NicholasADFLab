@@ -4,6 +4,39 @@
 	"parameters": {
 		"factoryName": {
 			"value": "datafactory-0318"
+		},
+		"LS_ADLS_accountKey": {
+			"value": ""
+		},
+		"LS_ASQL0318_connectionString": {
+			"value": ""
+		},
+		"LS_ASQL0319_connectionString": {
+			"value": ""
+		},
+		"LS_ASQL_Pipeline_connectionString": {
+			"value": ""
+		},
+		"LS_SQL_Local_Desktop_connectionString": {
+			"value": ""
+		},
+		"LS_SQL_Local_Desktop_password": {
+			"value": ""
+		},
+		"LS_SYNPSE0318_connectionString": {
+			"value": ""
+		},
+		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
+			"value": "sec-blobstorage0318-connectionstring"
+		},
+		"LS_ADLS_properties_typeProperties_url": {
+			"value": "https://datalake0318.dfs.core.windows.net"
+		},
+		"LS_KV_BlobStorage0318_properties_typeProperties_baseUrl": {
+			"value": "https://KV-ADF-Nicholas.vault.azure.net/"
+		},
+		"LS_SQL_Local_Desktop_properties_typeProperties_userName": {
+			"value": "administrator"
 		}
 	}
 }

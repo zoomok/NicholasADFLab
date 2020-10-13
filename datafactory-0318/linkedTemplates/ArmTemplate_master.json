@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'LS_ADLS'"
 		},
-		"LS_ASQL_connectionString": {
-			"type": "secureString",
-			"metadata": "Secure string for 'connectionString' of 'LS_ASQL'"
-		},
 		"LS_ASQL0318_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0318'"
@@ -23,9 +19,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_ASQL0319'"
 		},
+		"LS_ASQL_Pipeline_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_ASQL_Pipeline'"
+		},
+		"LS_SQL_Local_Desktop_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_SQL_Local_Desktop'"
+		},
+		"LS_SQL_Local_Desktop_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_SQL_Local_Desktop'"
+		},
 		"LS_SYNPSE0318_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'LS_SYNPSE0318'"
+		},
+		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "sec-blobstorage0318-connectionstring"
 		},
 		"LS_ADLS_properties_typeProperties_url": {
 			"type": "string",
@@ -35,9 +47,9 @@
 			"type": "string",
 			"defaultValue": "https://KV-ADF-Nicholas.vault.azure.net/"
 		},
-		"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
+		"LS_SQL_Local_Desktop_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "sec-blobstorage0318-connectionstring"
+			"defaultValue": "administrator"
 		},
 		"containerUri": {
 			"type": "string",
@@ -69,14 +81,14 @@
 					"LS_ADLS_accountKey": {
 						"value": "[parameters('LS_ADLS_accountKey')]"
 					},
-					"LS_ASQL_connectionString": {
-						"value": "[parameters('LS_ASQL_connectionString')]"
-					},
 					"LS_ASQL0318_connectionString": {
 						"value": "[parameters('LS_ASQL0318_connectionString')]"
 					},
 					"LS_ASQL0319_connectionString": {
 						"value": "[parameters('LS_ASQL0319_connectionString')]"
+					},
+					"LS_ASQL_Pipeline_connectionString": {
+						"value": "[parameters('LS_ASQL_Pipeline_connectionString')]"
 					},
 					"LS_SYNPSE0318_connectionString": {
 						"value": "[parameters('LS_SYNPSE0318_connectionString')]"
@@ -105,13 +117,42 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"LS_SQL_Local_Desktop_connectionString": {
+						"value": "[parameters('LS_SQL_Local_Desktop_connectionString')]"
+					},
+					"LS_SQL_Local_Desktop_password": {
+						"value": "[parameters('LS_SQL_Local_Desktop_password')]"
+					},
 					"LS_ABLB_KV_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('LS_ABLB_KV_properties_typeProperties_connectionString_secretName')]"
+					},
+					"LS_SQL_Local_Desktop_properties_typeProperties_userName": {
+						"value": "[parameters('LS_SQL_Local_Desktop_properties_typeProperties_userName')]"
 					}
 				}
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'datafactory-0318_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "datafactory-0318_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'datafactory-0318_ArmTemplate_1')]"
 			]
 		}
 	]
