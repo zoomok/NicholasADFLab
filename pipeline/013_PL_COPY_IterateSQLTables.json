@@ -35,12 +35,48 @@
 									"queryTimeout": "02:00:00",
 									"partitionOption": "None"
 								},
-								"enableStaging": false
+								"sink": {
+									"type": "SqlDWSink",
+									"preCopyScript": {
+										"value": "TRUNCATE TABLE [@{item().TABLE_SCHEMA}].[@{item().TABLE_NAME}]",
+										"type": "Expression"
+									},
+									"allowPolyBase": true,
+									"polyBaseSettings": {
+										"rejectValue": 0,
+										"rejectType": "value",
+										"useTypeDefault": false
+									},
+									"disableMetricsCollection": false
+								},
+								"enableStaging": true,
+								"stagingSettings": {
+									"linkedServiceName": {
+										"referenceName": "LS_ABLB_KV",
+										"type": "LinkedServiceReference"
+									}
+								}
 							},
 							"inputs": [
 								{
 									"referenceName": "DS_ASQL0319_Table",
 									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_SYNPSE0318",
+									"type": "DatasetReference",
+									"parameters": {
+										"DWTableName": {
+											"value": "@item().TABLE_NAME",
+											"type": "Expression"
+										},
+										"DWSchema": {
+											"value": "@item().TABLE_SCHEMA",
+											"type": "Expression"
+										}
+									}
 								}
 							]
 						}
