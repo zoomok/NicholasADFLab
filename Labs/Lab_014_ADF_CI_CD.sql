@@ -1,5 +1,5 @@
 --===========================================================================================================================
--- Lab 12 : Continuous integration and delivery (CI/CD) in ADF
+-- Lab 14 : Continuous integration and delivery (CI/CD) in ADF
 --===========================================================================================================================
 1. Link : https://www.youtube.com/watch?v=jJcikWOUqOk&list=PLMWaZteqtEaLTJffbbBzVOv9C0otal1FO&index=76
 
